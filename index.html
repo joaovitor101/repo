@@ -1574,7 +1574,7 @@
       box-shadow: 0 2px 8px rgba(32, 75, 110, 0.25);
     }
 
-    /* ─── Onda de Tradução de Cima para Baixo ───────────────────── */
+    /* ─── Onda de Tradução (Direcional: Cima->Baixo e Baixo->Cima) ──── */
     .lang-wave-overlay {
       position: fixed;
       inset: 0;
@@ -1585,7 +1585,7 @@
       overflow: hidden;
       contain: paint;
       opacity: 0;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.25s ease;
     }
 
     .lang-wave-overlay.active {
@@ -1596,65 +1596,75 @@
       position: absolute;
       left: 0;
       right: 0;
-      height: 160px;
+      height: 180px;
+      box-shadow: 0 0 40px rgba(65, 130, 185, 0.65), 0 0 12px rgba(255, 255, 255, 0.95);
+    }
+
+    /* Onda descendo: PT-BR -> EN-US */
+    .lang-wave-overlay.active.wave-down .lang-wave-line {
       background: linear-gradient(180deg, 
         rgba(32, 75, 110, 0) 0%, 
-        rgba(65, 130, 185, 0.15) 30%, 
+        rgba(65, 130, 185, 0.18) 30%, 
         rgba(255, 255, 255, 0.95) 55%, 
-        rgba(65, 130, 185, 0.4) 75%, 
+        rgba(65, 130, 185, 0.45) 75%, 
         rgba(32, 75, 110, 0) 100%
       );
-      box-shadow: 0 0 35px rgba(65, 130, 185, 0.6), 0 0 10px rgba(255, 255, 255, 0.9);
-      transform: translateY(-180px);
+      animation: sweepWaveDown 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
 
-    .lang-wave-overlay.active .lang-wave-line {
-      animation: sweepWave 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    /* Onda subindo: EN-US -> PT-BR */
+    .lang-wave-overlay.active.wave-up .lang-wave-line {
+      background: linear-gradient(0deg, 
+        rgba(32, 75, 110, 0) 0%, 
+        rgba(65, 130, 185, 0.18) 30%, 
+        rgba(255, 255, 255, 0.95) 55%, 
+        rgba(65, 130, 185, 0.45) 75%, 
+        rgba(32, 75, 110, 0) 100%
+      );
+      animation: sweepWaveUp 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
 
-    @keyframes sweepWave {
+    @keyframes sweepWaveDown {
       0% {
-        transform: translateY(-180px);
+        transform: translateY(-200px);
       }
       100% {
-        transform: translateY(112vh);
+        transform: translateY(115vh);
       }
     }
 
-    /* Efeito de onda transformadora nas letras */
-    .wave-flipping {
-      animation: letterWaveMorph 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-      display: inline-block;
+    @keyframes sweepWaveUp {
+      0% {
+        transform: translateY(115vh);
+      }
+      100% {
+        transform: translateY(-200px);
+      }
     }
 
-    @keyframes letterWaveMorph {
+    /* Transição Estática e Fluida: zero deslocamento de posição, transição puramente óptica */
+    .wave-flipping {
+      animation: textStaticMorph 0.58s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes textStaticMorph {
       0% {
         filter: blur(0px);
-        transform: translateY(0);
         opacity: 1;
       }
-      35% {
-        filter: blur(5px);
-        transform: translateY(-4px) scale(0.97);
-        opacity: 0.25;
+      40% {
+        filter: blur(3px);
+        opacity: 0.18;
         color: var(--accent);
       }
-      65% {
-        filter: blur(2px);
-        transform: translateY(2px) scale(1.02);
+      70% {
+        filter: blur(1.5px);
         opacity: 0.85;
-        text-shadow: 0 0 12px rgba(32, 75, 110, 0.5);
       }
       100% {
         filter: blur(0px);
-        transform: translateY(0) scale(1);
         opacity: 1;
-        text-shadow: none;
       }
-    }
-
-    .service-item.wave-flipping {
-      display: inline-flex !important;
     }
 
   </style>
@@ -2819,6 +2829,7 @@
 
     function applyTranslationWithWave(targetLang) {
       if (targetLang === currentLang) return;
+      const isGoingToEn = targetLang === 'en';
       currentLang = targetLang;
       localStorage.setItem('portfolio_lang', targetLang);
       document.documentElement.lang = targetLang === 'pt' ? 'pt-BR' : 'en-US';
@@ -2835,14 +2846,15 @@
         document.title = i18n[targetLang]['title'];
       }
 
-      // Ativa overlay da onda luminosa descendo
+      // Ativa overlay da onda luminosa na direção correspondente
       if (waveOverlay) {
-        waveOverlay.classList.remove('active');
+        waveOverlay.classList.remove('active', 'wave-down', 'wave-up');
         void waveOverlay.offsetWidth; // força reflow
-        waveOverlay.classList.add('active');
+        const dirClass = isGoingToEn ? 'wave-down' : 'wave-up';
+        waveOverlay.classList.add('active', dirClass);
         setTimeout(() => {
-          waveOverlay.classList.remove('active');
-        }, 1100);
+          waveOverlay.classList.remove('active', 'wave-down', 'wave-up');
+        }, 1500);
       }
 
       // Coleta todos os elementos traduzíveis
@@ -2855,19 +2867,26 @@
         if (!newText) return;
 
         const rect = el.getBoundingClientRect();
-        // Atraso baseado na posição vertical (Y) na tela - criando a cascata perfeita de cima para baixo
-        const progressY = Math.max(0, Math.min(1.2, rect.top / viewportHeight));
-        const delay = Math.round(progressY * 650);
+        // Atraso baseado na direção da onda:
+        // PT -> EN (cima para baixo): rect.top / viewportHeight
+        // EN -> PT (baixo para cima): (viewportHeight - rect.top) / viewportHeight
+        let progress;
+        if (isGoingToEn) {
+          progress = Math.max(0, Math.min(1.2, rect.top / viewportHeight));
+        } else {
+          progress = Math.max(0, Math.min(1.2, (viewportHeight - rect.top) / viewportHeight));
+        }
+        const delay = Math.round(progress * 850);
 
         setTimeout(() => {
           el.classList.add('wave-flipping');
-          // Altera o texto no ápice do efeito de onda
+          // Altera o texto no ápice do fade óptico
           setTimeout(() => {
             el.innerHTML = newText;
-          }, 160);
+          }, 240);
           setTimeout(() => {
             el.classList.remove('wave-flipping');
-          }, 520);
+          }, 600);
         }, delay);
       });
     }
