@@ -1399,9 +1399,128 @@
       .edu-item          { grid-template-columns: 1fr; }
       .exp-item          { grid-template-columns: 1fr; gap: 0.75rem; }
     }
+  
+    /* ─── Switch de Idioma (PT-BR / EN-US) ──────────────────────── */
+    .lang-switch-wrap {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 2px;
+      position: relative;
+    }
+
+    .lang-opt {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.25rem 0.65rem;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      user-select: none;
+    }
+
+    .lang-opt:hover {
+      color: var(--text);
+    }
+
+    .lang-opt.active {
+      background: var(--accent);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(32, 75, 110, 0.25);
+    }
+
+    /* ─── Onda de Tradução de Cima para Baixo ───────────────────── */
+    .lang-wave-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99999;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .lang-wave-overlay.active {
+      opacity: 1;
+    }
+
+    .lang-wave-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 160px;
+      background: linear-gradient(180deg, 
+        rgba(32, 75, 110, 0) 0%, 
+        rgba(65, 130, 185, 0.15) 30%, 
+        rgba(255, 255, 255, 0.95) 55%, 
+        rgba(65, 130, 185, 0.4) 75%, 
+        rgba(32, 75, 110, 0) 100%
+      );
+      box-shadow: 0 0 35px rgba(65, 130, 185, 0.6), 0 0 10px rgba(255, 255, 255, 0.9);
+      transform: translateY(-180px);
+    }
+
+    .lang-wave-overlay.active .lang-wave-line {
+      animation: sweepWave 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes sweepWave {
+      0% {
+        transform: translateY(-180px);
+      }
+      100% {
+        transform: translateY(112vh);
+      }
+    }
+
+    /* Efeito de onda transformadora nas letras */
+    .wave-flipping {
+      animation: letterWaveMorph 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      display: inline-block;
+    }
+
+    @keyframes letterWaveMorph {
+      0% {
+        filter: blur(0px);
+        transform: translateY(0);
+        opacity: 1;
+      }
+      35% {
+        filter: blur(5px);
+        transform: translateY(-4px) scale(0.97);
+        opacity: 0.25;
+        color: var(--accent);
+      }
+      65% {
+        filter: blur(2px);
+        transform: translateY(2px) scale(1.02);
+        opacity: 0.85;
+        text-shadow: 0 0 12px rgba(32, 75, 110, 0.5);
+      }
+      100% {
+        filter: blur(0px);
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        text-shadow: none;
+      }
+    }
+
   </style>
 </head>
 <body>
+
+  <!-- Overlay da Onda de Tradução -->
+  <div class="lang-wave-overlay" id="langWaveOverlay">
+    <div class="lang-wave-line"></div>
+  </div>
+
 
   <div class="progress-bar" id="progressBar"></div>
 
@@ -1411,20 +1530,25 @@
       <div class="header-inner">
         <div class="logo-group">
           <a href="#" class="logo">João<span>.</span>Kusaka</a>
-          <span class="logo-badge">TI & Infra N2</span>
+          <span class="logo-badge" data-i18n="header.badge">TI & Infra N2</span>
         </div>
 
         <nav class="nav" id="nav">
-          <a href="#atuacao">Atuação</a>
-          <a href="#experiencia">Experiência</a>
-          <a href="#infra">Infraestrutura</a>
-          <a href="#dev">Dev & IoT</a>
-          <a href="#sobre">Sobre</a>
-          <a href="#contato">Contato</a>
-          <span class="availability">Disponível para oportunidades</span>
+          <a href="#atuacao" data-i18n="nav.atuacao">Atuação</a>
+          <a href="#experiencia" data-i18n="nav.experiencia">Experiência</a>
+          <a href="#infra" data-i18n="nav.infra">Infraestrutura</a>
+          <a href="#dev" data-i18n="nav.dev">Dev & IoT</a>
+          <a href="#sobre" data-i18n="nav.sobre">Sobre</a>
+          <a href="#contato" data-i18n="nav.contato">Contato</a>
+          <span class="availability" data-i18n="header.availability">Disponível para oportunidades</span>
         </nav>
 
-        <div class="header-actions">
+                <div class="header-actions">
+          <div class="lang-switch-wrap" id="langSwitch" role="group" aria-label="Idioma / Language">
+            <button type="button" class="lang-opt active" data-lang="pt" aria-pressed="true">PT-BR</button>
+            <button type="button" class="lang-opt" data-lang="en" aria-pressed="false">EN-US</button>
+          </div>
+
           <a href="#contato" class="btn-cv-header" title="Entrar em contato">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1448,17 +1572,17 @@
         <div class="hero-grid">
           <div class="hero-left">
             <div class="hero-eyebrow">
-              <span class="hero-pill">Analista de Suporte de TI N2</span>
-              <span class="label">Angelus Funerária · Registro, SP</span>
+              <span class="hero-pill" data-i18n="hero.pill">Analista de Suporte de TI N2</span>
+              <span class="label" data-i18n="hero.company">Angelus Funerária · Registro, SP</span>
             </div>
 
-            <h1 class="hero-title reveal">
+            <h1 class="hero-title reveal" data-i18n="hero.title">
               Garantindo estabilidade,<br/>
               suporte resolutivo e<br/>
               <em>automação sob medida.</em>
             </h1>
 
-            <p class="hero-desc reveal reveal-delay-1">
+            <p class="hero-desc reveal reveal-delay-1" data-i18n="hero.desc">
               Atuo na sustentação e evolução de ambientes corporativos de TI:
               <strong>administração do Microsoft 365, suporte N2 a hardware e redes,
               gestão de ativos e resolução de incidentes complexos</strong>.
@@ -1467,34 +1591,28 @@
             </p>
 
             <div class="hero-actions reveal reveal-delay-2">
-              <a href="#experiencia" class="hero-cta">Ver Experiência N2 →</a>
-              <a href="#atuacao" class="hero-secondary-link">Como eu atuo na infraestrutura</a>
+              <a href="#experiencia" class="hero-cta" data-i18n="hero.cta">Ver Experiência N2 →</a>
+              <a href="#atuacao" class="hero-secondary-link" data-i18n="hero.secondary">Como eu atuo na infraestrutura</a>
             </div>
           </div>
 
           <div class="hero-side reveal reveal-delay-1">
             <div class="hero-stat">
-              <div class="hero-stat-badge">Ambiente Corporativo</div>
-              <div class="hero-stat-title">Suporte N2 Ativo</div>
-              <div class="hero-stat-label">
-                Hardware, VPN, redes, Windows, GPO e atendimento técnico resolutivo para múltiplas filiais.
-              </div>
+              <div class="hero-stat-badge" data-i18n="hero.stat1.badge">Ambiente Corporativo</div>
+              <div class="hero-stat-title" data-i18n="hero.stat1.title">Suporte N2 Ativo</div>
+              <div class="hero-stat-label" data-i18n="hero.stat1.label">Hardware, VPN, redes, Windows, GPO e atendimento técnico resolutivo para múltiplas filiais.</div>
             </div>
 
             <div class="hero-stat">
-              <div class="hero-stat-badge">Administração Cloud</div>
-              <div class="hero-stat-title">Microsoft 365 & AD</div>
-              <div class="hero-stat-label">
-                Gestão centralizada de usuários, licenças, permissões, acessos e segurança da informação.
-              </div>
+              <div class="hero-stat-badge" data-i18n="hero.stat2.badge">Administração Cloud</div>
+              <div class="hero-stat-title" data-i18n="hero.stat2.title">Microsoft 365 & AD</div>
+              <div class="hero-stat-label" data-i18n="hero.stat2.label">Gestão centralizada de usuários, licenças, permissões, acessos e segurança da informação.</div>
             </div>
 
             <div class="hero-stat">
-              <div class="hero-stat-badge">Diferencial Técnico</div>
-              <div class="hero-stat-title">Automação com Código</div>
-              <div class="hero-stat-label">
-                Scripts em Python e APIs em Node.js construídas para eliminar tarefas repetitivas de TI.
-              </div>
+              <div class="hero-stat-badge" data-i18n="hero.stat3.badge">Diferencial Técnico</div>
+              <div class="hero-stat-title" data-i18n="hero.stat3.title">Automação com Código</div>
+              <div class="hero-stat-label" data-i18n="hero.stat3.label">Scripts em Python e APIs em Node.js construídas para eliminar tarefas repetitivas de TI.</div>
             </div>
           </div>
         </div>
@@ -1528,11 +1646,9 @@
       <div class="container">
         <div class="section-header">
           <div class="section-title-wrap">
-            <span class="label">Competências Centrais</span>
-            <h2 class="section-title reveal">Como eu atuo na infraestrutura</h2>
-            <p class="section-subtitle reveal reveal-delay-1">
-              Do atendimento ao usuário de ponta até a gestão da infraestrutura central e automação de processos.
-            </p>
+            <span class="label" data-i18n="pillars.label">Competências Centrais</span>
+            <h2 class="section-title reveal" data-i18n="pillars.title">Como eu atuo na infraestrutura</h2>
+            <p class="section-subtitle reveal reveal-delay-1" data-i18n="pillars.subtitle">Do atendimento ao usuário de ponta até a gestão da infraestrutura central e automação de processos.</p>
           </div>
         </div>
 
@@ -1548,12 +1664,9 @@
                 <line x1="12" y1="17" x2="12" y2="21"/>
               </svg>
             </div>
-            <div class="pillar-num">01 / ADMINISTRAÇÃO</div>
-            <h3 class="pillar-title">Microsoft 365 & Active Directory</h3>
-            <p class="pillar-desc">
-              Gestão de locatário M365, provisionamento e desativação de usuários, controle de licenças,
-              permissões, grupos de segurança e políticas no Active Directory / GPO.
-            </p>
+            <div class="pillar-num" data-i18n="pillar1.num">01 / ADMINISTRAÇÃO</div>
+            <h3 class="pillar-title" data-i18n="pillar1.title">Microsoft 365 & Active Directory</h3>
+            <p class="pillar-desc" data-i18n="pillar1.desc">Gestão de locatário M365, provisionamento e desativação de usuários, controle de licenças, permissões, grupos de segurança e políticas no Active Directory / GPO.</p>
             <div class="pillar-tags">
               <span class="pillar-tag">Microsoft 365</span>
               <span class="pillar-tag">AD</span>
@@ -1570,12 +1683,9 @@
                 <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
               </svg>
             </div>
-            <div class="pillar-num">02 / SUPORTE N2</div>
-            <h3 class="pillar-title">Diagnóstico & Incidentes Críticos</h3>
-            <p class="pillar-desc">
-              Atendimento de segundo nível para problemas de hardware, estações Windows,
-              conectividade de rede, VPN corporativa e falhas em sistemas internos que travam a operação.
-            </p>
+            <div class="pillar-num" data-i18n="pillar2.num">02 / SUPORTE N2</div>
+            <h3 class="pillar-title" data-i18n="pillar2.title">Diagnóstico & Incidentes Críticos</h3>
+            <p class="pillar-desc" data-i18n="pillar2.desc">Atendimento de segundo nível para problemas de hardware, estações Windows, conectividade de rede, VPN corporativa e falhas em sistemas internos que travam a operação.</p>
             <div class="pillar-tags">
               <span class="pillar-tag">Hardware</span>
               <span class="pillar-tag">VPN</span>
@@ -1594,12 +1704,9 @@
                 <line x1="12" y1="22.08" x2="12" y2="12"/>
               </svg>
             </div>
-            <div class="pillar-num">03 / GESTÃO DE TI</div>
-            <h3 class="pillar-title">Ativos de TI & Homologação</h3>
-            <p class="pillar-desc">
-              Padronização de imagens de sistema, preparação e configuração de máquinas,
-              onboarding técnico de colaboradores e controle rigoroso de inventário entre matriz e filiais.
-            </p>
+            <div class="pillar-num" data-i18n="pillar3.num">03 / GESTÃO DE TI</div>
+            <h3 class="pillar-title" data-i18n="pillar3.title">Ativos de TI & Homologação</h3>
+            <p class="pillar-desc" data-i18n="pillar3.desc">Padronização de imagens de sistema, preparação e configuração de máquinas, onboarding técnico de colaboradores e controle rigoroso de inventário entre matriz e filiais.</p>
             <div class="pillar-tags">
               <span class="pillar-tag">Inventário</span>
               <span class="pillar-tag">Deploy de SO</span>
@@ -1618,12 +1725,9 @@
                 <line x1="12" y1="2" x2="12" y2="22" stroke-dasharray="2 3"/>
               </svg>
             </div>
-            <div class="pillar-num">04 / AUTOMAÇÃO</div>
-            <h3 class="pillar-title">Scripts & Ferramentas Internas</h3>
-            <p class="pillar-desc">
-              Automação de rotinas repetitivas com Python (processamento de relatórios, monitoramentos)
-              e desenvolvimento de aplicações sob demanda com Node.js para apoiar a infraestrutura.
-            </p>
+            <div class="pillar-num" data-i18n="pillar4.num">04 / AUTOMAÇÃO</div>
+            <h3 class="pillar-title" data-i18n="pillar4.title">Scripts & Ferramentas Internas</h3>
+            <p class="pillar-desc" data-i18n="pillar4.desc">Automação de rotinas repetitivas com Python (processamento de relatórios, monitoramentos) e desenvolvimento de aplicações sob demanda com Node.js para apoiar a infraestrutura.</p>
             <div class="pillar-tags">
               <span class="pillar-tag">Python</span>
               <span class="pillar-tag">Node.js</span>
@@ -1641,11 +1745,9 @@
       <div class="container">
         <div class="section-header">
           <div class="section-title-wrap">
-            <span class="label">Histórico de Atuação</span>
-            <h2 class="section-title reveal">Experiência Profissional</h2>
-            <p class="section-subtitle reveal reveal-delay-1">
-              Vivência diária no suporte de operações corporativas, sustentação de ambientes e desenvolvimento interno.
-            </p>
+            <span class="label" data-i18n="exp.label">Histórico de Atuação</span>
+            <h2 class="section-title reveal" data-i18n="exp.title">Experiência Profissional</h2>
+            <p class="section-subtitle reveal reveal-delay-1" data-i18n="exp.subtitle">Vivência diária no suporte de operações corporativas, sustentação de ambientes e desenvolvimento interno.</p>
           </div>
         </div>
 
@@ -1654,33 +1756,18 @@
           <!-- Angelus -->
           <div class="exp-item reveal">
             <div class="exp-period">
-              <div class="exp-dates">Jun. 2025 — Atual</div>
-              <span class="exp-badge">Em atuação</span>
+              <div class="exp-dates" data-i18n="exp.angelus.dates">Jun. 2025 — Atual</div>
+              <span class="exp-badge" data-i18n="exp.angelus.badge">Em atuação</span>
             </div>
             <div class="exp-content">
-              <h3 class="exp-role">Analista de Suporte de TI N2</h3>
-              <div class="exp-company">Angelus Plano de Assistência Funerária Ltda. · Registro, SP</div>
+              <h3 class="exp-role" data-i18n="exp.angelus.role">Analista de Suporte de TI N2</h3>
+              <div class="exp-company" data-i18n="exp.angelus.company">Angelus Plano de Assistência Funerária Ltda. · Registro, SP</div>
               <ul class="exp-bullets">
-                <li>
-                  <strong>Suporte Resolutivo N2:</strong> Atendimento especializado a incidentes de hardware, software,
-                  conectividade de rede e acessos VPN para colaboradores da matriz e filiais operacionais.
-                </li>
-                <li>
-                  <strong>Administração do Microsoft 365:</strong> Gestão de usuários, concessão de licenças,
-                  configuração de caixas de correio, permissões granulares e controle de segurança de acessos.
-                </li>
-                <li>
-                  <strong>Gestão do Ciclo de Vida de Ativos:</strong> Preparação, configuração, homologação e
-                  entrega de equipamentos para novas contratações, mantendo o parque de TI auditável e funcional.
-                </li>
-                <li>
-                  <strong>Automação de Processos & Desenvolvimento Interno:</strong> Criação de scripts em Python
-                  para automação de rotinas de áreas internas e desenvolvimento de aplicações web/APIs em Node.js.
-                </li>
-                <li>
-                  <strong>Procedimentos Técnicos & Infraestrutura:</strong> Elaboração de POPs (Procedimentos Operacionais Padrão)
-                  para incidentes recorrentes e participação ativa em projetos de melhoria contínua da infraestrutura de TI.
-                </li>
+                <li data-i18n="exp.angelus.b1"><strong>Suporte Resolutivo N2:</strong> Atendimento especializado a incidentes de hardware, software, conectividade de rede e acessos VPN para colaboradores da matriz e filiais operacionais.</li>
+                <li data-i18n="exp.angelus.b2"><strong>Administração do Microsoft 365:</strong> Gestão de usuários, concessão de licenças, configuração de caixas de correio, permissões granulares e controle de segurança de acessos.</li>
+                <li data-i18n="exp.angelus.b3"><strong>Gestão do Ciclo de Vida de Ativos:</strong> Preparação, configuração, homologação e entrega de equipamentos para novas contratações, mantendo o parque de TI auditável e funcional.</li>
+                <li data-i18n="exp.angelus.b4"><strong>Automação de Processos & Desenvolvimento Interno:</strong> Criação de scripts em Python para automação de rotinas de áreas internas e desenvolvimento de aplicações web/APIs em Node.js.</li>
+                <li data-i18n="exp.angelus.b5"><strong>Procedimentos Técnicos & Infraestrutura:</strong> Elaboração de POPs (Procedimentos Operacionais Padrão) para incidentes recorrentes e participação ativa em projetos de melhoria contínua da infraestrutura de TI.</li>
               </ul>
             </div>
           </div>
@@ -1688,20 +1775,14 @@
           <!-- LocalSig -->
           <div class="exp-item reveal reveal-delay-1">
             <div class="exp-period">
-              <div class="exp-dates">Estágio · 6 meses</div>
+              <div class="exp-dates" data-i18n="exp.localsig.dates">Estágio · 6 meses</div>
             </div>
             <div class="exp-content">
-              <h3 class="exp-role">Estagiário de TI e Desenvolvimento</h3>
-              <div class="exp-company">LocalSig Inteligência Geográfica · Registro, SP</div>
+              <h3 class="exp-role" data-i18n="exp.localsig.role">Estagiário de TI e Desenvolvimento</h3>
+              <div class="exp-company" data-i18n="exp.localsig.company">LocalSig Inteligência Geográfica · Registro, SP</div>
               <ul class="exp-bullets">
-                <li>
-                  <strong>Automações Operacionais:</strong> Desenvolvi scripts em Python para automatizar tarefas repetitivas
-                  e tratamento de dados, reduzindo o tempo operacional da equipe.
-                </li>
-                <li>
-                  <strong>Gestão de Dados Técnicos:</strong> Utilização prática de QGIS e AutoCAD no mapeamento,
-                  organização e gerenciamento de dados geográficos e bases espaciais.
-                </li>
+                <li data-i18n="exp.localsig.b1"><strong>Automações Operacionais:</strong> Desenvolvi scripts em Python para automatizar tarefas repetitivas e tratamento de dados, reduzindo o tempo operacional da equipe.</li>
+                <li data-i18n="exp.localsig.b2"><strong>Gestão de Dados Técnicos:</strong> Utilização prática de QGIS e AutoCAD no mapeamento, organização e gerenciamento de dados geográficos e bases espaciais.</li>
               </ul>
             </div>
           </div>
@@ -1717,11 +1798,9 @@
         <!-- BLOCO 1: INFRAESTRUTURA & OPERAÇÕES (A PLANTA / MAPEAMENTO) -->
         <div id="infra" class="project-section-block">
           <div class="block-header">
-            <span class="block-tag">01 / Projeto de Infraestrutura & Suporte N2</span>
-            <h2 class="block-title reveal">A Planta & Mapa de Ativos de TI das Filiais</h2>
-            <p class="block-subtitle reveal reveal-delay-1">
-              Centralização e auditoria física de equipamentos: a "planta digital" de infraestrutura desenvolvida para sustentar o suporte N2 da Angelus.
-            </p>
+            <span class="block-tag" data-i18n="infra.tag">01 / Projeto de Infraestrutura & Suporte N2</span>
+            <h2 class="block-title reveal" data-i18n="infra.title">A Planta & Mapa de Ativos de TI das Filiais</h2>
+            <p class="block-subtitle reveal reveal-delay-1" data-i18n="infra.subtitle">Centralização e auditoria física de equipamentos: a "planta digital" de infraestrutura desenvolvida para sustentar o suporte N2 da Angelus.</p>
           </div>
 
           <div class="infra-card reveal">
@@ -1738,16 +1817,16 @@
                 <circle cx="40" cy="33" r="4.5" fill="#204B6E" fill-opacity="0.9"/>
                 <ellipse cx="40" cy="46" rx="6" ry="2.5" fill="#204B6E" fill-opacity="0.15"/>
               </svg>
-              <span class="infra-badge-tag">Planta Digital de Ativos</span>
+              <span class="infra-badge-tag" data-i18n="infra.badgetag">Planta Digital de Ativos</span>
             </div>
 
             <div class="infra-body">
               <div class="project-meta">
-                <span class="project-category">Gestão de Ativos de TI · Operação & Filiais</span>
+                <span class="project-category" data-i18n="infra.category">Gestão de Ativos de TI · Operação & Filiais</span>
                 <span class="project-year">2025</span>
               </div>
 
-              <h3 class="project-name">Mapeamento Centralizado de Ativos de TI das Filiais — Angelus</h3>
+              <h3 class="project-name" data-i18n="infra.projectname">Mapeamento Centralizado de Ativos de TI das Filiais — Angelus</h3>
 
               <div class="project-stack">
                 <span class="stack-tag">React (Vite)</span>
@@ -1760,25 +1839,16 @@
 
               <div class="case-study">
                 <div class="case-block">
-                  <div class="case-label">O Gargalo de Infraestrutura</div>
-                  <p class="case-text">
-                    Com filiais descentralizadas, o inventário de máquinas, equipamentos de rede e periféricos
-                    era mantido em planilhas sem rastreabilidade. Dificultava manutenções preventivas,
-                    onboarding de colaboradores e triagem ágil em chamados de suporte N2.
-                  </p>
+                  <div class="case-label" data-i18n="infra.caselabel1">O Gargalo de Infraestrutura</div>
+                  <p class="case-text" data-i18n="infra.casetext1">Com filiais descentralizadas, o inventário de máquinas, equipamentos de rede e periféricos era mantido em planilhas sem rastreabilidade. Dificultava manutenções preventivas, onboarding de colaboradores e triagem ágil em chamados de suporte N2.</p>
                 </div>
                 <div class="case-block">
-                  <div class="case-label">A Solução em Produção</div>
-                  <p class="case-text">
-                    Construí uma aplicação web para cadastrar, auditar e mapear geograficamente os ativos de cada unidade.
-                    Implementei autenticação JWT, emissão e upload de termos de entrega assinados e esteira de CI/CD para deploy seguro na AWS.
-                  </p>
+                  <div class="case-label" data-i18n="infra.caselabel2">A Solução em Produção</div>
+                  <p class="case-text" data-i18n="infra.casetext2">Construí uma aplicação web para cadastrar, auditar e mapear geograficamente os ativos de cada unidade. Implementei autenticação JWT, emissão e upload de termos de entrega assinados e esteira de CI/CD para deploy seguro na AWS.</p>
                 </div>
               </div>
 
-              <div class="project-result">
-                <span>100% dos ativos mapeados</span> por filial. Redução expressiva no tempo de atendimento de chamados N2 e controle patrimonial auditável.
-              </div>
+              <div class="project-result" data-i18n="infra.result"><span>100% dos ativos mapeados</span> por filial. Redução expressiva no tempo de atendimento de chamados N2 e controle patrimonial auditável.</div>
 
               <div class="project-links">
                 <a href="https://github.com/joaovitor101/planta_cliniprev2" target="_blank" rel="noopener" class="project-link">
@@ -1794,11 +1864,9 @@
         <div id="dev" class="project-section-block">
           <div class="section-header" style="margin-bottom: 2.25rem;">
             <div class="section-title-wrap">
-              <span class="block-tag">02 / Desenvolvimento de Software & IoT</span>
-              <h2 class="block-title reveal">Projetos de Software, Telemetria & APIs</h2>
-              <p class="block-subtitle reveal reveal-delay-1">
-                Aplicações completas, integração de sensores em tempo real com ESP32 e arquitetura de microsserviços/APIs testadas.
-              </p>
+              <span class="block-tag" data-i18n="dev.tag">02 / Desenvolvimento de Software & IoT</span>
+              <h2 class="block-title reveal" data-i18n="dev.title">Projetos de Software, Telemetria & APIs</h2>
+              <p class="block-subtitle reveal reveal-delay-1" data-i18n="dev.subtitle">Aplicações completas, integração de sensores em tempo real com ESP32 e arquitetura de microsserviços/APIs testadas.</p>
             </div>
             <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="section-link">Ver GitHub →</a>
           </div>
@@ -1848,24 +1916,16 @@
 
                 <div class="case-study">
                   <div class="case-block">
-                    <div class="case-label">O Desafio</div>
-                    <p class="case-text">
-                      Necessidade de monitorar parâmetros críticos (temperatura, pH e amônia)
-                      de tanques aquícolas sem depender de leituras manuais esparsas.
-                    </p>
+                    <div class="case-label" data-i18n="dev.p1.label1">O Desafio</div>
+                    <p class="case-text" data-i18n="dev.p1.text1">Necessidade de monitorar parâmetros críticos (temperatura, pH e amônia) de tanques aquícolas sem depender de leituras manuais esparsas.</p>
                   </div>
                   <div class="case-block">
-                    <div class="case-label">A Solução</div>
-                    <p class="case-text">
-                      Integração de hardware ESP32 via protocolo MQTT com backend Node.js,
-                      persistência em MySQL e dashboard para visualização em tempo real.
-                    </p>
+                    <div class="case-label" data-i18n="dev.p1.label2">A Solução</div>
+                    <p class="case-text" data-i18n="dev.p1.text2">Integração de hardware ESP32 via protocolo MQTT com backend Node.js, persistência em MySQL e dashboard para visualização em tempo real.</p>
                   </div>
                 </div>
 
-                <div class="project-result">
-                  Telemetria contínua com <span>alertas de desvio</span> em tempo real.
-                </div>
+                <div class="project-result" data-i18n="dev.p1.result">Telemetria contínua com <span>alertas de desvio</span> em tempo real.</div>
 
                 <div class="project-links">
                   <a href="https://github.com/Progressus-Camarize" target="_blank" rel="noopener" class="project-link">
@@ -1921,24 +1981,16 @@
 
                 <div class="case-study">
                   <div class="case-block">
-                    <div class="case-label">O Desafio</div>
-                    <p class="case-text">
-                      Identificar precocemente o ácaro Varroa e deformidades em asas de abelhas
-                      por processamento de imagem, evitando a perda de colmeias inteiras.
-                    </p>
+                    <div class="case-label" data-i18n="dev.p2.label1">O Desafio</div>
+                    <p class="case-text" data-i18n="dev.p2.text1">Identificar precocemente o ácaro Varroa e deformidades em asas de abelhas por processamento de imagem, evitando a perda de colmeias inteiras.</p>
                   </div>
                   <div class="case-block">
-                    <div class="case-label">A Solução</div>
-                    <p class="case-text">
-                      Backend em FastAPI com banco PostgreSQL, comunicação IoT por MQTT
-                      e modelos de visão computacional para detecção automatizada de anomalias.
-                    </p>
+                    <div class="case-label" data-i18n="dev.p2.label2">A Solução</div>
+                    <p class="case-text" data-i18n="dev.p2.text2">Backend em FastAPI com banco PostgreSQL, comunicação IoT por MQTT e modelos de visão computacional para detecção automatizada de anomalias.</p>
                   </div>
                 </div>
 
-                <div class="project-result">
-                  <span>Diagnóstico precoce</span> com visão computacional e telemetria de campo.
-                </div>
+                <div class="project-result" data-i18n="dev.p2.result"><span>Diagnóstico precoce</span> com visão computacional e telemetria de campo.</div>
 
                 <div class="project-links">
                   <a href="https://github.com/orgs/Ollintech/repositories" target="_blank" rel="noopener" class="project-link">
@@ -1990,24 +2042,16 @@
 
                 <div class="case-study">
                   <div class="case-block">
-                    <div class="case-label">O Objetivo</div>
-                    <p class="case-text">
-                      Desenvolver uma API REST segura com CRUD de posts, modelos relacionais,
-                      upload de imagens via Cloudinary e padrão de arquitetura modular.
-                    </p>
+                    <div class="case-label" data-i18n="dev.p3.label1">O Objetivo</div>
+                    <p class="case-text" data-i18n="dev.p3.text1">Desenvolver uma API REST segura com CRUD de posts, modelos relacionais, upload de imagens via Cloudinary e padrão de arquitetura modular.</p>
                   </div>
                   <div class="case-block">
-                    <div class="case-label">A Implementação</div>
-                    <p class="case-text">
-                      Construção com NestJS e Sequelize no MySQL, cobrindo fluxos críticos
-                      com testes automatizados em Jest (unitários e de integração).
-                    </p>
+                    <div class="case-label" data-i18n="dev.p3.label2">A Implementação</div>
+                    <p class="case-text" data-i18n="dev.p3.text2">Construção com NestJS e Sequelize no MySQL, cobrindo fluxos críticos com testes automatizados em Jest (unitários e de integração).</p>
                   </div>
                 </div>
 
-                <div class="project-result">
-                  <span>Confiabilidade e testes</span> com suíte automatizada em Jest.
-                </div>
+                <div class="project-result" data-i18n="dev.p3.result"><span>Confiabilidade e testes</span> com suíte automatizada em Jest.</div>
 
                 <div class="project-links">
                   <a href="https://github.com/laboratorio-de-praticas-2025-2" target="_blank" rel="noopener" class="project-link">
@@ -2030,36 +2074,20 @@
         <div class="about-grid">
 
           <div class="about-left">
-            <span class="label about-label">Perfil Técnico</span>
+            <span class="label about-label" data-i18n="about.label">Perfil Técnico</span>
 
-            <p class="about-bio reveal">
-              Sou Analista de Suporte com raciocínio de quem constrói software:
-              <em>não apenas corrijo o sintoma, resolvo a causa raiz.</em>
-            </p>
+            <p class="about-bio reveal" data-i18n="about.bio">Sou Analista de Suporte com raciocínio de quem constrói software: <em>não apenas corrijo o sintoma, resolvo a causa raiz.</em></p>
 
-            <p class="about-text reveal reveal-delay-1">
-              Natural de Registro, interior de São Paulo. Formado como <strong>Técnico em Desenvolvimento de Sistemas pela ETEC</strong>
-              e atualmente cursando <strong>Tecnólogo em Desenvolvimento de Software Multiplataforma na Fatec Registro</strong>.
-            </p>
+            <p class="about-text reveal reveal-delay-1" data-i18n="about.p1">Natural de Registro, interior de São Paulo. Formado como <strong>Técnico em Desenvolvimento de Sistemas pela ETEC</strong> e atualmente cursando <strong>Tecnólogo em Desenvolvimento de Software Multiplataforma na Fatec Registro</strong>.</p>
 
-            <p class="about-text reveal reveal-delay-1">
-              No dia a dia na <strong>Angelus Assistência Funerária</strong>, atuo como <strong>Analista de Suporte de TI N2</strong>.
-              Minha responsabilidade vai da garantia de funcionamento dos sistemas corporativos, suporte a VPN e infraestrutura
-              até a administração completa do locatário Microsoft 365. Paralelamente, utilizo <strong>Python e Node.js</strong> para
-              criar automações internas e ferramentas que eliminam processos manuais da operação.
-            </p>
+            <p class="about-text reveal reveal-delay-1" data-i18n="about.p2">No dia a dia na <strong>Angelus Assistência Funerária</strong>, atuo como <strong>Analista de Suporte de TI N2</strong>. Minha responsabilidade vai da garantia de funcionamento dos sistemas corporativos, suporte a VPN e infraestrutura até a administração completa do locatário Microsoft 365. Paralelamente, utilizo <strong>Python e Node.js</strong> para criar automações internas e ferramentas que eliminam processos manuais da operação.</p>
 
-            <p class="about-text reveal reveal-delay-1">
-              Possuo <strong>Inglês Avançado (7 anos no Fisk)</strong>, com facilidade plena para leitura de documentações técnicas,
-              troubleshooting com suporte internacional e comunicação técnica clara.
-            </p>
+            <p class="about-text reveal reveal-delay-1" data-i18n="about.p3">Possuo <strong>Inglês Avançado (7 anos no Fisk)</strong>, com facilidade plena para leitura de documentações técnicas, troubleshooting com suporte internacional e comunicação técnica clara.</p>
 
             <!-- Habilidades com Suporte & Infra em 1º lugar -->
             <div class="skills-section reveal reveal-delay-2">
               <div class="skills-group">
-                <div class="skills-title">
-                  Suporte de TI & Infraestrutura <span>(Foco Principal)</span>
-                </div>
+                <div class="skills-title" data-i18n="skills.g1">Suporte de TI & Infraestrutura <span>(Foco Principal)</span></div>
                 <ul class="skills-list">
                   <li class="highlight">Microsoft 365 (Admin)</li>
                   <li class="highlight">Active Directory</li>
@@ -2074,9 +2102,7 @@
               </div>
 
               <div class="skills-group">
-                <div class="skills-title">
-                  Automação & Scripting <span>(Superpoder de TI)</span>
-                </div>
+                <div class="skills-title" data-i18n="skills.g2">Automação & Scripting <span>(Superpoder de TI)</span></div>
                 <ul class="skills-list">
                   <li class="highlight">Python para Automação</li>
                   <li>Scripts Operacionais</li>
@@ -2087,9 +2113,7 @@
               </div>
 
               <div class="skills-group">
-                <div class="skills-title">
-                  Desenvolvimento, Dados & Cloud
-                </div>
+                <div class="skills-title" data-i18n="skills.g3">Desenvolvimento, Dados & Cloud</div>
                 <ul class="skills-list">
                   <li>Node.js</li>
                   <li>Express & NestJS</li>
@@ -2108,55 +2132,55 @@
 
             <!-- Processo com foco em Suporte e Resolução -->
             <div class="process reveal">
-              <div class="process-title">Metodologia de Atendimento & Suporte</div>
+              <div class="process-title" data-i18n="about.process.title">Metodologia de Atendimento & Suporte</div>
               <div class="process-steps">
                 <div class="step">
                   <div class="step-num">01</div>
-                  <div class="step-name">Triagem & Causa Raiz</div>
-                  <p class="step-desc">Identifico a origem real do incidente, não apenas o sintoma superficial.</p>
+                  <div class="step-name" data-i18n="process.s1.name">Triagem & Causa Raiz</div>
+                  <p class="step-desc" data-i18n="process.s1.desc">Identifico a origem real do incidente, não apenas o sintoma superficial.</p>
                 </div>
                 <div class="step">
                   <div class="step-num">02</div>
-                  <div class="step-name">Estabilização</div>
-                  <p class="step-desc">Aplicação da resolução técnica com foco em restaurar a operação com segurança.</p>
+                  <div class="step-name" data-i18n="process.s2.name">Estabilização</div>
+                  <p class="step-desc" data-i18n="process.s2.desc">Aplicação da resolução técnica com foco em restaurar a operação com segurança.</p>
                 </div>
                 <div class="step">
                   <div class="step-num">03</div>
-                  <div class="step-name">Padronização</div>
-                  <p class="step-desc">Documento o procedimento em POP para acelerar futuros atendimentos.</p>
+                  <div class="step-name" data-i18n="process.s3.name">Padronização</div>
+                  <p class="step-desc" data-i18n="process.s3.desc">Documento o procedimento em POP para acelerar futuros atendimentos.</p>
                 </div>
                 <div class="step">
                   <div class="step-num">04</div>
-                  <div class="step-name">Automação</div>
-                  <p class="step-desc">Se a tarefa ou incidente é recorrente, crio script ou rotina para automatizar.</p>
+                  <div class="step-name" data-i18n="process.s4.name">Automação</div>
+                  <p class="step-desc" data-i18n="process.s4.desc">Se a tarefa ou incidente é recorrente, crio script ou rotina para automatizar.</p>
                 </div>
               </div>
             </div>
 
             <!-- Formação -->
             <div class="education reveal">
-              <div class="education-title">Formação Acadêmica & Idiomas</div>
+              <div class="education-title" data-i18n="about.edu.title">Formação Acadêmica & Idiomas</div>
               <div class="edu-list">
                 <div class="edu-item">
                   <div>
-                    <div class="edu-name">Tecnólogo em Desenvolvimento de Software Multiplataforma</div>
+                    <div class="edu-name" data-i18n="edu.e1.name">Tecnólogo em Desenvolvimento de Software Multiplataforma</div>
                     <div class="edu-institution">Fatec Registro</div>
                   </div>
                   <div class="edu-year">2024 – 2026</div>
                 </div>
                 <div class="edu-item">
                   <div>
-                    <div class="edu-name">Técnico em Desenvolvimento de Sistemas (Ensino Médio Integrado)</div>
+                    <div class="edu-name" data-i18n="edu.e2.name">Técnico em Desenvolvimento de Sistemas (Ensino Médio Integrado)</div>
                     <div class="edu-institution">ETEC Registro</div>
                   </div>
                   <div class="edu-year">2021 – 2023</div>
                 </div>
                 <div class="edu-item">
                   <div>
-                    <div class="edu-name">Inglês Avançado</div>
-                    <div class="edu-institution">Fisk — 7 anos de formação</div>
+                    <div class="edu-name" data-i18n="edu.e3.name">Inglês Avançado</div>
+                    <div class="edu-institution" data-i18n="edu.e3.inst">Fisk — 7 anos de formação</div>
                   </div>
-                  <div class="edu-year">Avançado (B2/C1)</div>
+                  <div class="edu-year" data-i18n="edu.e3.year">Avançado (B2/C1)</div>
                 </div>
               </div>
             </div>
@@ -2180,17 +2204,11 @@
     <section id="contato" class="contact">
       <div class="container">
         <div class="contact-inner">
-          <span class="label contact-eyebrow">Contato Direto</span>
+          <span class="label contact-eyebrow" data-i18n="contact.eyebrow">Contato Direto</span>
 
-          <h2 class="contact-title reveal">
-            Vamos conversar sobre<br/>oportunidades em TI?
-          </h2>
+          <h2 class="contact-title reveal" data-i18n="contact.title">Vamos conversar sobre<br/>oportunidades em TI?</h2>
 
-          <p class="contact-desc reveal reveal-delay-1">
-            Estou disponível para vagas de Suporte de TI N2, Infraestrutura, Sysadmin Júnior ou
-            funções híbridas que valorizem a capacidade de unir operação sólida com automação.
-            Retorno rápido em até 24 horas.
-          </p>
+          <p class="contact-desc reveal reveal-delay-1" data-i18n="contact.desc">Estou disponível para vagas de Suporte de TI N2, Infraestrutura, Sysadmin Júnior ou funções híbridas que valorizem a capacidade de unir operação sólida com automação. Retorno rápido em até 24 horas.</p>
 
           <div class="contact-email-row reveal reveal-delay-1">
             <a href="mailto:joao.kusaka27@gmail.com" class="contact-email-big" style="margin-bottom: 0;">
@@ -2201,7 +2219,7 @@
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
-              <span>Copiar</span>
+              <span data-i18n="btn.copy">Copiar</span>
             </button>
           </div>
 
@@ -2234,7 +2252,7 @@
   <footer>
     <div class="container">
       <div class="footer-inner">
-        <span class="footer-copy">© 2026 João Vitor Umetsu Kusaka — Analista de Suporte de TI N2.</span>
+        <span class="footer-copy" data-i18n="footer.copy">© 2026 João Vitor Umetsu Kusaka — Analista de Suporte de TI N2.</span>
         <nav class="footer-links">
           <a href="#atuacao">Atuação</a>
           <a href="#experiencia">Experiência</a>
@@ -2348,6 +2366,329 @@
         });
       });
     }
+  
+    // ─── Mecanismo de Tradução em 1 Clique com Onda Vertical ────
+    const i18n = {
+  "pt": {
+    "title": "João Kusaka — Analista de Suporte de TI N2 & Infraestrutura",
+    "header.badge": "TI & Infra N2",
+    "nav.atuacao": "Atuação",
+    "nav.experiencia": "Experiência",
+    "nav.infra": "Infraestrutura",
+    "nav.dev": "Dev & IoT",
+    "nav.sobre": "Sobre",
+    "nav.contato": "Contato",
+    "header.availability": "Disponível para oportunidades",
+    "hero.pill": "Analista de Suporte de TI N2",
+    "hero.company": "Angelus Funerária · Registro, SP",
+    "hero.title": "Garantindo estabilidade,<br/>suporte resolutivo e<br/><em>automação sob medida.</em>",
+    "hero.desc": "Atuo na sustentação e evolução de ambientes corporativos de TI: <strong>administração do Microsoft 365, suporte N2 a hardware e redes, gestão de ativos e resolução de incidentes complexos</strong>. Meu diferencial é técnico: utilizo <strong>Python e desenvolvimento interno</strong> para automatizar rotinas operacionais e criar ferramentas que simplificam a gestão de TI.",
+    "hero.cta": "Ver Experiência N2 →",
+    "hero.secondary": "Como eu atuo na infraestrutura",
+    "hero.stat1.badge": "Ambiente Corporativo",
+    "hero.stat1.title": "Suporte N2 Ativo",
+    "hero.stat1.label": "Hardware, VPN, redes, Windows, GPO e atendimento técnico resolutivo para múltiplas filiais.",
+    "hero.stat2.badge": "Administração Cloud",
+    "hero.stat2.title": "Microsoft 365 & AD",
+    "hero.stat2.label": "Gestão centralizada de usuários, licenças, permissões, acessos e segurança da informação.",
+    "hero.stat3.badge": "Diferencial Técnico",
+    "hero.stat3.title": "Automação com Código",
+    "hero.stat3.label": "Scripts em Python e APIs em Node.js construídas para eliminar tarefas repetitivas de TI.",
+    "pillars.label": "Competências Centrais",
+    "pillars.title": "Como eu atuo na infraestrutura",
+    "pillars.subtitle": "Do atendimento ao usuário de ponta até a gestão da infraestrutura central e automação de processos.",
+    "pillar1.num": "01 / ADMINISTRAÇÃO",
+    "pillar1.title": "Microsoft 365 & Active Directory",
+    "pillar1.desc": "Gestão de locatário M365, provisionamento e desativação de usuários, controle de licenças, permissões, grupos de segurança e políticas no Active Directory / GPO.",
+    "pillar2.num": "02 / SUPORTE N2",
+    "pillar2.title": "Diagnóstico & Incidentes Críticos",
+    "pillar2.desc": "Atendimento de segundo nível para problemas de hardware, estações Windows, conectividade de rede, VPN corporativa e falhas em sistemas internos que travam a operação.",
+    "pillar3.num": "03 / GESTÃO DE TI",
+    "pillar3.title": "Ativos de TI & Homologação",
+    "pillar3.desc": "Padronização de imagens de sistema, preparação e configuração de máquinas, onboarding técnico de colaboradores e controle rigoroso de inventário entre matriz e filiais.",
+    "pillar4.num": "04 / AUTOMAÇÃO",
+    "pillar4.title": "Scripts & Ferramentas Internas",
+    "pillar4.desc": "Automação de rotinas repetitivas com Python (processamento de relatórios, monitoramentos) e desenvolvimento de aplicações sob demanda com Node.js para apoiar a infraestrutura.",
+    "exp.label": "Histórico de Atuação",
+    "exp.title": "Experiência Profissional",
+    "exp.subtitle": "Vivência diária no suporte de operações corporativas, sustentação de ambientes e desenvolvimento interno.",
+    "exp.angelus.dates": "Jun. 2025 — Atual",
+    "exp.angelus.badge": "Em atuação",
+    "exp.angelus.role": "Analista de Suporte de TI N2",
+    "exp.angelus.company": "Angelus Plano de Assistência Funerária Ltda. · Registro, SP",
+    "exp.angelus.b1": "<strong>Suporte Resolutivo N2:</strong> Atendimento especializado a incidentes de hardware, software, conectividade de rede e acessos VPN para colaboradores da matriz e filiais operacionais.",
+    "exp.angelus.b2": "<strong>Administração do Microsoft 365:</strong> Gestão de usuários, concessão de licenças, configuração de caixas de correio, permissões granulares e controle de segurança de acessos.",
+    "exp.angelus.b3": "<strong>Gestão do Ciclo de Vida de Ativos:</strong> Preparação, configuração, homologação e entrega de equipamentos para novas contratações, mantendo o parque de TI auditável e funcional.",
+    "exp.angelus.b4": "<strong>Automação de Processos & Desenvolvimento Interno:</strong> Criação de scripts em Python para automação de rotinas de áreas internas e desenvolvimento de aplicações web/APIs em Node.js.",
+    "exp.angelus.b5": "<strong>Procedimentos Técnicos & Infraestrutura:</strong> Elaboração de POPs (Procedimentos Operacionais Padrão) para incidentes recorrentes e participação ativa em projetos de melhoria contínua da infraestrutura de TI.",
+    "exp.localsig.dates": "Estágio · 6 meses",
+    "exp.localsig.role": "Estagiário de TI e Desenvolvimento",
+    "exp.localsig.company": "LocalSig Inteligência Geográfica · Registro, SP",
+    "exp.localsig.b1": "<strong>Automações Operacionais:</strong> Desenvolvi scripts em Python para automatizar tarefas repetitivas e tratamento de dados, reduzindo o tempo operacional da equipe.",
+    "exp.localsig.b2": "<strong>Gestão de Dados Técnicos:</strong> Utilização prática de QGIS e AutoCAD no mapeamento, organização e gerenciamento de dados geográficos e bases espaciais.",
+    "infra.tag": "01 / Projeto de Infraestrutura & Suporte N2",
+    "infra.title": "A Planta & Mapa de Ativos de TI das Filiais",
+    "infra.subtitle": "Centralização e auditoria física de equipamentos: a \"planta digital\" de infraestrutura desenvolvida para sustentar o suporte N2 da Angelus.",
+    "infra.badgetag": "Planta Digital de Ativos",
+    "infra.category": "Gestão de Ativos de TI · Operação & Filiais",
+    "infra.projectname": "Mapeamento Centralizado de Ativos de TI das Filiais — Angelus",
+    "infra.caselabel1": "O Gargalo de Infraestrutura",
+    "infra.casetext1": "Com filiais descentralizadas, o inventário de máquinas, equipamentos de rede e periféricos era mantido em planilhas sem rastreabilidade. Dificultava manutenções preventivas, onboarding de colaboradores e triagem ágil em chamados de suporte N2.",
+    "infra.caselabel2": "A Solução em Produção",
+    "infra.casetext2": "Construí uma aplicação web para cadastrar, auditar e mapear geograficamente os ativos de cada unidade. Implementei autenticação JWT, emissão e upload de termos de entrega assinados e esteira de CI/CD para deploy seguro na AWS.",
+    "infra.result": "<span>100% dos ativos mapeados</span> por filial. Redução expressiva no tempo de atendimento de chamados N2 e controle patrimonial auditável.",
+    "dev.tag": "02 / Desenvolvimento de Software & IoT",
+    "dev.title": "Projetos de Software, Telemetria & APIs",
+    "dev.subtitle": "Aplicações completas, integração de sensores em tempo real com ESP32 e arquitetura de microsserviços/APIs testadas.",
+    "dev.p1.label1": "O Desafio",
+    "dev.p1.text1": "Necessidade de monitorar parâmetros críticos (temperatura, pH e amônia) de tanques aquícolas sem depender de leituras manuais esparsas.",
+    "dev.p1.label2": "A Solução",
+    "dev.p1.text2": "Integração de hardware ESP32 via protocolo MQTT com backend Node.js, persistência em MySQL e dashboard para visualização em tempo real.",
+    "dev.p1.result": "Telemetria contínua com <span>alertas de desvio</span> em tempo real.",
+    "dev.p2.label1": "O Desafio",
+    "dev.p2.text1": "Identificar precocemente o ácaro Varroa e deformidades em asas de abelhas por processamento de imagem, evitando a perda de colmeias inteiras.",
+    "dev.p2.label2": "A Solução",
+    "dev.p2.text2": "Backend em FastAPI com banco PostgreSQL, comunicação IoT por MQTT e modelos de visão computacional para detecção automatizada de anomalias.",
+    "dev.p2.result": "<span>Diagnóstico precoce</span> com visão computacional e telemetria de campo.",
+    "dev.p3.label1": "O Objetivo",
+    "dev.p3.text1": "Desenvolver uma API REST segura com CRUD de posts, modelos relacionais, upload de imagens via Cloudinary e padrão de arquitetura modular.",
+    "dev.p3.label2": "A Implementação",
+    "dev.p3.text2": "Construção com NestJS e Sequelize no MySQL, cobrindo fluxos críticos com testes automatizados em Jest (unitários e de integração).",
+    "dev.p3.result": "<span>Confiabilidade e testes</span> com suíte automatizada em Jest.",
+    "about.label": "Perfil Técnico",
+    "about.bio": "Sou Analista de Suporte com raciocínio de quem constrói software: <em>não apenas corrijo o sintoma, resolvo a causa raiz.</em>",
+    "about.p1": "Natural de Registro, interior de São Paulo. Formado como <strong>Técnico em Desenvolvimento de Sistemas pela ETEC</strong> e atualmente cursando <strong>Tecnólogo em Desenvolvimento de Software Multiplataforma na Fatec Registro</strong>.",
+    "about.p2": "No dia a dia na <strong>Angelus Assistência Funerária</strong>, atuo como <strong>Analista de Suporte de TI N2</strong>. Minha responsabilidade vai da garantia de funcionamento dos sistemas corporativos, suporte a VPN e infraestrutura até a administração completa do locatário Microsoft 365. Paralelamente, utilizo <strong>Python e Node.js</strong> para criar automações internas e ferramentas que eliminam processos manuais da operação.",
+    "about.p3": "Possuo <strong>Inglês Avançado (7 anos no Fisk)</strong>, com facilidade plena para leitura de documentações técnicas, troubleshooting com suporte internacional e comunicação técnica clara.",
+    "skills.g1": "Suporte de TI & Infraestrutura <span>(Foco Principal)</span>",
+    "skills.g2": "Automação & Scripting <span>(Superpoder de TI)</span>",
+    "skills.g3": "Desenvolvimento, Dados & Cloud",
+    "about.process.title": "Metodologia de Atendimento & Suporte",
+    "process.s1.name": "Triagem & Causa Raiz",
+    "process.s1.desc": "Identifico a origem real do incidente, não apenas o sintoma superficial.",
+    "process.s2.name": "Estabilização",
+    "process.s2.desc": "Aplicação da resolução técnica com foco em restaurar a operação com segurança.",
+    "process.s3.name": "Padronização",
+    "process.s3.desc": "Documento o procedimento em POP para acelerar futuros atendimentos.",
+    "process.s4.name": "Automação",
+    "process.s4.desc": "Se a tarefa ou incidente é recorrente, crio script ou rotina para automatizar.",
+    "about.edu.title": "Formação Acadêmica & Idiomas",
+    "edu.e1.name": "Tecnólogo em Desenvolvimento de Software Multiplataforma",
+    "edu.e2.name": "Técnico em Desenvolvimento de Sistemas (Ensino Médio Integrado)",
+    "edu.e3.name": "Inglês Avançado",
+    "edu.e3.inst": "Fisk — 7 anos de formação",
+    "edu.e3.year": "Avançado (B2/C1)",
+    "contact.eyebrow": "Contato Direto",
+    "contact.title": "Vamos conversar sobre<br/>oportunidades em TI?",
+    "contact.desc": "Estou disponível para vagas de Suporte de TI N2, Infraestrutura, Sysadmin Júnior ou funções híbridas que valorizem a capacidade de unir operação sólida com automação. Retorno rápido em até 24 horas.",
+    "btn.copy": "Copiar",
+    "footer.copy": "© 2026 João Vitor Umetsu Kusaka — Analista de Suporte de TI N2."
+  },
+  "en": {
+    "title": "João Kusaka — Tier 2 IT Support Analyst & Infrastructure",
+    "header.badge": "IT & Infra L2",
+    "nav.atuacao": "Domains",
+    "nav.experiencia": "Experience",
+    "nav.infra": "Infrastructure",
+    "nav.dev": "Dev & IoT",
+    "nav.sobre": "About",
+    "nav.contato": "Contact",
+    "header.availability": "Available for opportunities",
+    "hero.pill": "Tier 2 IT Support Analyst",
+    "hero.company": "Angelus Care Plan · Registro, SP, Brazil",
+    "hero.title": "Ensuring stability,<br/>resolutive support and<br/><em>tailored automation.</em>",
+    "hero.desc": "I sustain and scale enterprise IT environments: <strong>Microsoft 365 administration, Tier 2 hardware and network support, asset management, and complex incident resolution</strong>. My key technical advantage: I leverage <strong>Python and internal software development</strong> to automate operational workflows and build tools that streamline IT management.",
+    "hero.cta": "View Tier 2 Experience →",
+    "hero.secondary": "How I operate in infrastructure",
+    "hero.stat1.badge": "Enterprise Environment",
+    "hero.stat1.title": "Active Tier 2 Support",
+    "hero.stat1.label": "Hardware, VPN, networks, Windows, GPO, and resolutive technical support for multiple branches.",
+    "hero.stat2.badge": "Cloud Administration",
+    "hero.stat2.title": "Microsoft 365 & AD",
+    "hero.stat2.label": "Centralized management of users, licenses, permissions, access controls, and information security.",
+    "hero.stat3.badge": "Technical Advantage",
+    "hero.stat3.title": "Code-driven Automation",
+    "hero.stat3.label": "Python scripts and Node.js APIs engineered to eliminate repetitive IT operations.",
+    "pillars.label": "Core Competencies",
+    "pillars.title": "How I operate in infrastructure",
+    "pillars.subtitle": "From high-touch end-user support to core infrastructure management and workflow automation.",
+    "pillar1.num": "01 / ADMINISTRATION",
+    "pillar1.title": "Microsoft 365 & Active Directory",
+    "pillar1.desc": "M365 tenant management, user provisioning and deactivation, license control, permissions, security groups, and Active Directory / GPO policies.",
+    "pillar2.num": "02 / TIER 2 SUPPORT",
+    "pillar2.title": "Troubleshooting & Critical Incidents",
+    "pillar2.desc": "Tier 2 technical resolution for hardware issues, Windows workstations, network connectivity, corporate VPN, and internal system outages.",
+    "pillar3.num": "03 / IT MANAGEMENT",
+    "pillar3.title": "IT Assets & Provisioning",
+    "pillar3.desc": "OS image standardization, workstation setup, technical employee onboarding, and strict inventory control between headquarters and branches.",
+    "pillar4.num": "04 / AUTOMATION",
+    "pillar4.title": "Scripts & Internal Tools",
+    "pillar4.desc": "Automation of repetitive routines with Python (report processing, monitoring) and on-demand development with Node.js to empower infrastructure.",
+    "exp.label": "Career History",
+    "exp.title": "Professional Experience",
+    "exp.subtitle": "Daily hands-on experience in enterprise operations support, environment maintenance, and internal development.",
+    "exp.angelus.dates": "Jun. 2025 — Present",
+    "exp.angelus.badge": "Current Role",
+    "exp.angelus.role": "Tier 2 IT Support Analyst",
+    "exp.angelus.company": "Angelus Care Plan Ltd. · Registro, SP, Brazil",
+    "exp.angelus.b1": "<strong>Resolutive Tier 2 Support:</strong> Specialized support for hardware, software, network connectivity, and VPN access for headquarters and operational branch staff.",
+    "exp.angelus.b2": "<strong>Microsoft 365 Administration:</strong> User lifecycle management, license provisioning, mailbox configuration, granular permissions, and access security controls.",
+    "exp.angelus.b3": "<strong>Asset Lifecycle Management:</strong> Machine setup, configuration, validation, and delivery for new hires, keeping the IT fleet fully audit-ready and functional.",
+    "exp.angelus.b4": "<strong>Process Automation & Internal Tools:</strong> Crafting Python automation scripts for internal business units and developing web applications/APIs in Node.js.",
+    "exp.angelus.b5": "<strong>Technical SOPs & Infrastructure:</strong> Authoring Standard Operating Procedures (SOPs) for recurring incidents and actively participating in IT infrastructure upgrade initiatives.",
+    "exp.localsig.dates": "Internship · 6 months",
+    "exp.localsig.role": "IT & Development Intern",
+    "exp.localsig.company": "LocalSig Geographic Intelligence · Registro, SP, Brazil",
+    "exp.localsig.b1": "<strong>Operational Automation:</strong> Built Python scripts to automate repetitive workflows and data transformation, reducing operational turnaround times.",
+    "exp.localsig.b2": "<strong>Geospatial Data Management:</strong> Hands-on utilization of QGIS and AutoCAD for mapping, structuring, and managing spatial datasets.",
+    "infra.tag": "01 / Infrastructure & Tier 2 Support Project",
+    "infra.title": "Branch IT Asset Map & Digital Blueprint",
+    "infra.subtitle": "Physical equipment centralization and auditing: the digital infrastructure blueprint engineered to power Angelus Tier 2 support.",
+    "infra.badgetag": "Digital Asset Blueprint",
+    "infra.category": "IT Asset Management · Operations & Branches",
+    "infra.projectname": "Centralized Branch IT Asset Mapping — Angelus",
+    "infra.caselabel1": "The Infrastructure Bottleneck",
+    "infra.casetext1": "With decentralized branches, the inventory of workstations, network devices, and peripherals was scattered across unverified spreadsheets. This hindered preventive maintenance, onboarding, and fast troubleshooting for Tier 2 tickets.",
+    "infra.caselabel2": "The Production Solution",
+    "infra.casetext2": "Engineered a full-stack web application to catalog, audit, and geographically map equipment per branch. Implemented JWT authentication, digital signed handoff terms upload, and a CI/CD pipeline for automated AWS deployment.",
+    "infra.result": "<span>100% of branch assets mapped</span>. Drastic reduction in Tier 2 ticket resolution times and fully auditable asset tracking.",
+    "dev.tag": "02 / Software Development & IoT",
+    "dev.title": "Software, Telemetry & API Projects",
+    "dev.subtitle": "End-to-end applications, real-time ESP32 sensor integration, and reliable tested API architectures.",
+    "dev.p1.label1": "The Challenge",
+    "dev.p1.text1": "Need to monitor critical parameters (temperature, pH, and ammonia) in aquaculture tanks without relying on sparse manual inspections.",
+    "dev.p1.label2": "The Solution",
+    "dev.p1.text2": "ESP32 microcontrollers integrated over MQTT with a Node.js backend, MySQL persistence, and a live web telemetry dashboard.",
+    "dev.p1.result": "Continuous telemetry with real-time <span>deviation alerts</span>.",
+    "dev.p2.label1": "The Challenge",
+    "dev.p2.text1": "Early identification of the Varroa mite and wing deformities in bee colonies through image processing to prevent hive collapse.",
+    "dev.p2.label2": "The Solution",
+    "dev.p2.text2": "FastAPI backend with PostgreSQL, MQTT IoT communication, and computer vision models for automated anomaly detection.",
+    "dev.p2.result": "<span>Early diagnosis</span> powered by computer vision and field telemetry.",
+    "dev.p3.label1": "The Objective",
+    "dev.p3.text1": "Build a secure, modular REST API featuring post CRUD operations, relational ORM models, and Cloudinary media uploads.",
+    "dev.p3.label2": "Implementation",
+    "dev.p3.text2": "Engineered with NestJS and Sequelize on MySQL, covering mission-critical workflows with Jest automated test suites.",
+    "dev.p3.result": "<span>Reliability and stability</span> ensured by Jest test suites.",
+    "about.label": "Technical Profile",
+    "about.bio": "I am a Support Analyst with an engineer's mindset: <em>I don't just patch symptoms, I eliminate the root cause.</em>",
+    "about.p1": "Based in Registro, São Paulo, Brazil. Certified <strong>Systems Development Technician from ETEC</strong> and currently pursuing a <strong>B.Tech in Multiplatform Software Development at Fatec Registro</strong>.",
+    "about.p2": "In my day-to-day role at <strong>Angelus</strong>, I serve as a <strong>Tier 2 IT Support Analyst</strong>. My scope spans corporate systems reliability, VPN and network infrastructure, all the way to comprehensive Microsoft 365 tenant administration. In parallel, I use <strong>Python and Node.js</strong> to build internal automation scripts and custom tools that cut out manual overhead.",
+    "about.p3": "I hold <strong>Advanced English proficiency (7 years at Fisk)</strong>, comfortable reading complex technical RFCs/documentation, interfacing with international vendor support, and communicating clearly.",
+    "skills.g1": "IT Support & Infrastructure <span>(Primary Focus)</span>",
+    "skills.g2": "Automation & Scripting <span>(IT Advantage)</span>",
+    "skills.g3": "Development, Data & Cloud",
+    "about.process.title": "Incident Resolution & Support Methodology",
+    "process.s1.name": "Triage & Root Cause",
+    "process.s1.desc": "Uncover the fundamental failure point, not just the visible symptom.",
+    "process.s2.name": "Stabilization",
+    "process.s2.desc": "Deploying the fix swiftly to restore operational continuity with integrity.",
+    "process.s3.name": "Standardization",
+    "process.s3.desc": "Documenting standard operating procedures (SOP) to accelerate future resolutions.",
+    "process.s4.name": "Automation",
+    "process.s4.desc": "If the task or incident recurs, I write a script or scheduled job to automate it.",
+    "about.edu.title": "Education & Languages",
+    "edu.e1.name": "B.Tech in Multiplatform Software Development",
+    "edu.e2.name": "Technical Degree in Systems Development (High School Integrated)",
+    "edu.e3.name": "Advanced English",
+    "edu.e3.inst": "Fisk Language Institute — 7-year program",
+    "edu.e3.year": "Advanced (B2/C1)",
+    "contact.eyebrow": "Direct Contact",
+    "contact.title": "Let's talk about<br/>IT opportunities?",
+    "contact.desc": "I am open to Tier 2 IT Support, Infrastructure, Junior Sysadmin, or hybrid roles that value operational reliability paired with automation skills. Quick response within 24 hours.",
+    "btn.copy": "Copy",
+    "footer.copy": "© 2026 João Vitor Umetsu Kusaka — Tier 2 IT Support Analyst."
+  }
+};
+    let currentLang = 'pt';
+    const waveOverlay = document.getElementById('langWaveOverlay');
+    const langBtns = document.querySelectorAll('.lang-opt');
+
+    function applyTranslationWithWave(targetLang) {
+      if (targetLang === currentLang) return;
+      currentLang = targetLang;
+      localStorage.setItem('portfolio_lang', targetLang);
+      document.documentElement.lang = targetLang === 'pt' ? 'pt-BR' : 'en-US';
+
+      // Atualiza botões
+      langBtns.forEach(btn => {
+        const isActive = btn.getAttribute('data-lang') === targetLang;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      // Título da página
+      if (i18n[targetLang]['title']) {
+        document.title = i18n[targetLang]['title'];
+      }
+
+      // Ativa overlay da onda luminosa descendo
+      if (waveOverlay) {
+        waveOverlay.classList.remove('active');
+        void waveOverlay.offsetWidth; // força reflow
+        waveOverlay.classList.add('active');
+        setTimeout(() => {
+          waveOverlay.classList.remove('active');
+        }, 1100);
+      }
+
+      // Coleta todos os elementos traduzíveis
+      const elements = Array.from(document.querySelectorAll('[data-i18n]'));
+      const viewportHeight = window.innerHeight;
+
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const newText = i18n[targetLang][key];
+        if (!newText) return;
+
+        const rect = el.getBoundingClientRect();
+        // Atraso baseado na posição vertical (Y) na tela - criando a cascata perfeita de cima para baixo
+        const progressY = Math.max(0, Math.min(1.2, rect.top / viewportHeight));
+        const delay = Math.round(progressY * 650);
+
+        setTimeout(() => {
+          el.classList.add('wave-flipping');
+          // Altera o texto no ápice do efeito de onda
+          setTimeout(() => {
+            el.innerHTML = newText;
+          }, 160);
+          setTimeout(() => {
+            el.classList.remove('wave-flipping');
+          }, 520);
+        }, delay);
+      });
+    }
+
+    // Event listeners dos botões
+    langBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetLang = btn.getAttribute('data-lang');
+        applyTranslationWithWave(targetLang);
+      });
+    });
+
+    // Carrega idioma salvo se houver
+    const savedLang = localStorage.getItem('portfolio_lang');
+    if (savedLang && savedLang !== 'pt' && i18n[savedLang]) {
+      // Aplica direto sem onda no carregamento inicial
+      currentLang = savedLang;
+      document.documentElement.lang = 'en-US';
+      langBtns.forEach(btn => {
+        const isActive = btn.getAttribute('data-lang') === savedLang;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+      if (i18n[savedLang]['title']) {
+        document.title = i18n[savedLang]['title'];
+      }
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[savedLang][key]) {
+          el.innerHTML = i18n[savedLang][key];
+        }
+      });
+    }
+
   </script>
 </body>
 </html>
