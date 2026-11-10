@@ -1643,6 +1643,10 @@
       }
     }
 
+    .service-item.wave-flipping {
+      display: inline-flex !important;
+    }
+
   </style>
 </head>
 <body>
@@ -1745,22 +1749,22 @@
     <!-- ─── FAIXA DE SERVIÇOS ────────────────────────────────────── -->
     <div class="services-band" aria-hidden="true">
       <div class="services-track">
-        <span class="service-item">Suporte N2 a Sistemas & Hardware</span>
-        <span class="service-item">Microsoft 365 & Active Directory</span>
-        <span class="service-item">Gestão de Ativos de TI</span>
-        <span class="service-item">VPN, Redes & Conectividade</span>
-        <span class="service-item">Automação de Processos com Python</span>
-        <span class="service-item">Políticas de Grupo (GPO) & Windows</span>
-        <span class="service-item">Desenvolvimento de Ferramentas Internas</span>
-        <span class="service-item">Documentação Técnica & POPs</span>
-        <span class="service-item">Suporte N2 a Sistemas & Hardware</span>
-        <span class="service-item">Microsoft 365 & Active Directory</span>
-        <span class="service-item">Gestão de Ativos de TI</span>
-        <span class="service-item">VPN, Redes & Conectividade</span>
-        <span class="service-item">Automação de Processos com Python</span>
-        <span class="service-item">Políticas de Grupo (GPO) & Windows</span>
-        <span class="service-item">Desenvolvimento de Ferramentas Internas</span>
-        <span class="service-item">Documentação Técnica & POPs</span>
+        <span class="service-item" data-i18n="band.s1">Suporte N2 a Sistemas & Hardware</span>
+        <span class="service-item" data-i18n="band.s2">Microsoft 365 & Active Directory</span>
+        <span class="service-item" data-i18n="band.s3">Gestão de Ativos de TI</span>
+        <span class="service-item" data-i18n="band.s4">VPN, Redes & Conectividade</span>
+        <span class="service-item" data-i18n="band.s5">Automação de Processos com Python</span>
+        <span class="service-item" data-i18n="band.s6">Políticas de Grupo (GPO) & Windows</span>
+        <span class="service-item" data-i18n="band.s7">Desenvolvimento de Ferramentas Internas</span>
+        <span class="service-item" data-i18n="band.s8">Documentação Técnica & POPs</span>
+        <span class="service-item" data-i18n="band.s1">Suporte N2 a Sistemas & Hardware</span>
+        <span class="service-item" data-i18n="band.s2">Microsoft 365 & Active Directory</span>
+        <span class="service-item" data-i18n="band.s3">Gestão de Ativos de TI</span>
+        <span class="service-item" data-i18n="band.s4">VPN, Redes & Conectividade</span>
+        <span class="service-item" data-i18n="band.s5">Automação de Processos com Python</span>
+        <span class="service-item" data-i18n="band.s6">Políticas de Grupo (GPO) & Windows</span>
+        <span class="service-item" data-i18n="band.s7">Desenvolvimento de Ferramentas Internas</span>
+        <span class="service-item" data-i18n="band.s8">Documentação Técnica & POPs</span>
       </div>
     </div>
 
@@ -1794,7 +1798,7 @@
               <span class="pillar-tag">Microsoft 365</span>
               <span class="pillar-tag">AD</span>
               <span class="pillar-tag">GPO</span>
-              <span class="pillar-tag">Acessos</span>
+              <span class="pillar-tag" data-i18n="ptag.access">Acessos</span>
             </div>
           </div>
 
@@ -1812,7 +1816,7 @@
             <div class="pillar-tags">
               <span class="pillar-tag">Hardware</span>
               <span class="pillar-tag">VPN</span>
-              <span class="pillar-tag">Redes</span>
+              <span class="pillar-tag" data-i18n="ptag.networks">Redes</span>
               <span class="pillar-tag">Windows</span>
             </div>
           </div>
@@ -1831,10 +1835,10 @@
             <h3 class="pillar-title" data-i18n="pillar3.title">Ativos de TI & Homologação</h3>
             <p class="pillar-desc" data-i18n="pillar3.desc">Padronização de imagens de sistema, preparação e configuração de máquinas, onboarding técnico de colaboradores e controle rigoroso de inventário entre matriz e filiais.</p>
             <div class="pillar-tags">
-              <span class="pillar-tag">Inventário</span>
-              <span class="pillar-tag">Deploy de SO</span>
+              <span class="pillar-tag" data-i18n="ptag.inventory">Inventário</span>
+              <span class="pillar-tag" data-i18n="ptag.osdeploy">Deploy de SO</span>
               <span class="pillar-tag">Onboarding</span>
-              <span class="pillar-tag">Filiais</span>
+              <span class="pillar-tag" data-i18n="ptag.branches">Filiais</span>
             </div>
           </div>
 
@@ -1991,7 +1995,7 @@
               <h2 class="block-title reveal" data-i18n="dev.title">Projetos de Software, Telemetria & APIs</h2>
               <p class="block-subtitle reveal reveal-delay-1" data-i18n="dev.subtitle">Aplicações completas, integração de sensores em tempo real com ESP32 e arquitetura de microsserviços/APIs testadas.</p>
             </div>
-            <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="section-link">Ver GitHub →</a>
+            <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="section-link" data-i18n="dev.ghlink">Ver GitHub →</a>
           </div>
 
           <div class="dev-projects-grid">
@@ -2023,11 +2027,11 @@
 
               <div class="project-body">
                 <div class="project-meta">
-                  <span class="project-category">IoT · Telemetria & Redes</span>
+                  <span class="project-category" data-i18n="dev.p1.cat">IoT · Telemetria & Redes</span>
                   <span class="project-year">2024</span>
                 </div>
 
-                <h3 class="project-name">Monitoramento IoT de Criação de Camarões — Camarize</h3>
+                <h3 class="project-name" data-i18n="dev.p1.title">Monitoramento IoT de Criação de Camarões — Camarize</h3>
 
                 <div class="project-stack">
                   <span class="stack-tag">Node.js</span>
@@ -2088,11 +2092,11 @@
 
               <div class="project-body">
                 <div class="project-meta">
-                  <span class="project-category">Automação · ML & Backend</span>
+                  <span class="project-category" data-i18n="dev.p2.cat">Automação · ML & Backend</span>
                   <span class="project-year">2024</span>
                 </div>
 
-                <h3 class="project-name">Visão Computacional na Apicultura — MiteScan</h3>
+                <h3 class="project-name" data-i18n="dev.p2.title">Visão Computacional na Apicultura — MiteScan</h3>
 
                 <div class="project-stack">
                   <span class="stack-tag">Python</span>
@@ -2149,11 +2153,11 @@
 
               <div class="project-body">
                 <div class="project-meta">
-                  <span class="project-category">APIs & Backend · Confiabilidade</span>
+                  <span class="project-category" data-i18n="dev.p3.cat">APIs & Backend · Confiabilidade</span>
                   <span class="project-year">2023</span>
                 </div>
 
-                <h3 class="project-name">API REST com Testes Automatizados — Blog Backend</h3>
+                <h3 class="project-name" data-i18n="dev.p3.title">API REST com Testes Automatizados — Blog Backend</h3>
 
                 <div class="project-stack">
                   <span class="stack-tag">NestJS</span>
@@ -2214,24 +2218,24 @@
                 <ul class="skills-list">
                   <li class="highlight">Microsoft 365 (Admin)</li>
                   <li class="highlight">Active Directory</li>
-                  <li class="highlight">Gestão de Ativos de TI</li>
-                  <li class="highlight">Suporte N2 (Hardware/Software)</li>
-                  <li>VPN Corporativa</li>
-                  <li>Redes TCP/IP & Conectividade</li>
-                  <li>GPO (Políticas de Grupo)</li>
+                  <li class="highlight" data-i18n="skill.assets">Gestão de Ativos de TI</li>
+                  <li class="highlight" data-i18n="skill.n2">Suporte N2 (Hardware/Software)</li>
+                  <li data-i18n="skill.vpn">VPN Corporativa</li>
+                  <li data-i18n="skill.networks">Redes TCP/IP & Conectividade</li>
+                  <li data-i18n="skill.gpo">GPO (Políticas de Grupo)</li>
                   <li>Windows Server & Desktop</li>
-                  <li>Documentação Técnica & POPs</li>
+                  <li data-i18n="skill.docs">Documentação Técnica & POPs</li>
                 </ul>
               </div>
 
               <div class="skills-group">
                 <div class="skills-title" data-i18n="skills.g2">Automação & Scripting <span>(Superpoder de TI)</span></div>
                 <ul class="skills-list">
-                  <li class="highlight">Python para Automação</li>
-                  <li>Scripts Operacionais</li>
-                  <li>APIs REST Internas</li>
-                  <li>Tratamento de Dados com Python</li>
-                  <li>Rotinas Automatizadas</li>
+                  <li class="highlight" data-i18n="skill.pyauto">Python para Automação</li>
+                  <li data-i18n="skill.scripts">Scripts Operacionais</li>
+                  <li data-i18n="skill.rest">APIs REST Internas</li>
+                  <li data-i18n="skill.data">Tratamento de Dados com Python</li>
+                  <li data-i18n="skill.routines">Rotinas Automatizadas</li>
                 </ul>
               </div>
 
@@ -2314,7 +2318,7 @@
             <div class="about-photo-wrap">
               <div class="about-photo">
                 <div class="about-photo-badge">João Vitor U. Kusaka</div>
-                <span class="about-photo-caption">Analista de Suporte N2 · Registro, SP</span>
+                <span class="about-photo-caption" data-i18n="about.caption">Analista de Suporte N2 · Registro, SP</span>
               </div>
             </div>
           </div>
@@ -2377,12 +2381,12 @@
       <div class="footer-inner">
         <span class="footer-copy" data-i18n="footer.copy">© 2026 João Vitor Umetsu Kusaka — Analista de Suporte de TI N2.</span>
         <nav class="footer-links">
-          <a href="#atuacao">Atuação</a>
-          <a href="#experiencia">Experiência</a>
-          <a href="#infra">Infraestrutura</a>
-          <a href="#dev">Dev & IoT</a>
-          <a href="#sobre">Sobre</a>
-          <a href="#contato">Contato</a>
+          <a href="#atuacao" data-i18n="footer.atuacao">Atuação</a>
+          <a href="#experiencia" data-i18n="footer.experiencia">Experiência</a>
+          <a href="#infra" data-i18n="footer.infra">Infraestrutura</a>
+          <a href="#dev" data-i18n="footer.dev">Dev & IoT</a>
+          <a href="#sobre" data-i18n="footer.sobre">Sobre</a>
+          <a href="#contato" data-i18n="footer.contato">Contato</a>
         </nav>
       </div>
     </div>
@@ -2605,7 +2609,45 @@
     "contact.title": "Vamos conversar sobre<br/>oportunidades em TI?",
     "contact.desc": "Estou disponível para vagas de Suporte de TI N2, Infraestrutura, Sysadmin Júnior ou funções híbridas que valorizem a capacidade de unir operação sólida com automação. Retorno rápido em até 24 horas.",
     "btn.copy": "Copiar",
-    "footer.copy": "© 2026 João Vitor Umetsu Kusaka — Analista de Suporte de TI N2."
+    "footer.copy": "© 2026 João Vitor Umetsu Kusaka — Analista de Suporte de TI N2.",
+    "band.s1": "Suporte N2 a Sistemas & Hardware",
+    "band.s2": "Microsoft 365 & Active Directory",
+    "band.s3": "Gestão de Ativos de TI",
+    "band.s4": "VPN, Redes & Conectividade",
+    "band.s5": "Automação de Processos com Python",
+    "band.s6": "Políticas de Grupo (GPO) & Windows",
+    "band.s7": "Desenvolvimento de Ferramentas Internas",
+    "band.s8": "Documentação Técnica & POPs",
+    "ptag.access": "Acessos",
+    "ptag.networks": "Redes",
+    "ptag.inventory": "Inventário",
+    "ptag.osdeploy": "Deploy de SO",
+    "ptag.branches": "Filiais",
+    "dev.ghlink": "Ver GitHub →",
+    "dev.p1.cat": "IoT · Telemetria & Redes",
+    "dev.p1.title": "Monitoramento IoT de Criação de Camarões — Camarize",
+    "dev.p2.cat": "Automação · ML & Backend",
+    "dev.p2.title": "Visão Computacional na Apicultura — MiteScan",
+    "dev.p3.cat": "APIs & Backend · Confiabilidade",
+    "dev.p3.title": "API REST com Testes Automatizados — Blog Backend",
+    "skill.assets": "Gestão de Ativos de TI",
+    "skill.n2": "Suporte N2 (Hardware/Software)",
+    "skill.vpn": "VPN Corporativa",
+    "skill.networks": "Redes TCP/IP & Conectividade",
+    "skill.gpo": "GPO (Políticas de Grupo)",
+    "skill.docs": "Documentação Técnica & POPs",
+    "skill.pyauto": "Python para Automação",
+    "skill.scripts": "Scripts Operacionais",
+    "skill.rest": "APIs REST Internas",
+    "skill.data": "Tratamento de Dados com Python",
+    "skill.routines": "Rotinas Automatizadas",
+    "about.caption": "Analista de Suporte N2 · Registro, SP",
+    "footer.atuacao": "Atuação",
+    "footer.experiencia": "Experiência",
+    "footer.infra": "Infraestrutura",
+    "footer.dev": "Dev & IoT",
+    "footer.sobre": "Sobre",
+    "footer.contato": "Contato"
   },
   "en": {
     "title": "João Kusaka — Tier 2 IT Support Analyst & Infrastructure",
@@ -2720,7 +2762,45 @@
     "contact.title": "Let's talk about<br/>IT opportunities?",
     "contact.desc": "I am open to Tier 2 IT Support, Infrastructure, Junior Sysadmin, or hybrid roles that value operational reliability paired with automation skills. Quick response within 24 hours.",
     "btn.copy": "Copy",
-    "footer.copy": "© 2026 João Vitor Umetsu Kusaka — Tier 2 IT Support Analyst."
+    "footer.copy": "© 2026 João Vitor Umetsu Kusaka — Tier 2 IT Support Analyst.",
+    "band.s1": "Tier 2 Systems & Hardware Support",
+    "band.s2": "Microsoft 365 & Active Directory",
+    "band.s3": "IT Asset Management",
+    "band.s4": "VPN, Networks & Connectivity",
+    "band.s5": "Process Automation with Python",
+    "band.s6": "Group Policy (GPO) & Windows",
+    "band.s7": "Internal Tools Development",
+    "band.s8": "Technical Docs & SOPs",
+    "ptag.access": "Access Control",
+    "ptag.networks": "Networks",
+    "ptag.inventory": "Inventory",
+    "ptag.osdeploy": "OS Deployment",
+    "ptag.branches": "Branch Offices",
+    "dev.ghlink": "View GitHub →",
+    "dev.p1.cat": "IoT · Telemetry & Networks",
+    "dev.p1.title": "IoT Shrimp Farming Monitoring — Camarize",
+    "dev.p2.cat": "Automation · ML & Backend",
+    "dev.p2.title": "Computer Vision in Beekeeping — MiteScan",
+    "dev.p3.cat": "APIs & Backend · Reliability",
+    "dev.p3.title": "REST API with Automated Tests — Blog Backend",
+    "skill.assets": "IT Asset Management",
+    "skill.n2": "Tier 2 Support (Hardware/Software)",
+    "skill.vpn": "Corporate VPN",
+    "skill.networks": "TCP/IP Networks & Connectivity",
+    "skill.gpo": "GPO (Group Policies)",
+    "skill.docs": "Technical Docs & SOPs",
+    "skill.pyauto": "Python for Automation",
+    "skill.scripts": "Operational Scripts",
+    "skill.rest": "Internal REST APIs",
+    "skill.data": "Data Processing with Python",
+    "skill.routines": "Automated Routines",
+    "about.caption": "Tier 2 Support Analyst · Registro, SP",
+    "footer.atuacao": "Domains",
+    "footer.experiencia": "Experience",
+    "footer.infra": "Infrastructure",
+    "footer.dev": "Dev & IoT",
+    "footer.sobre": "About",
+    "footer.contato": "Contact"
   }
 };
     let currentLang = 'pt';
