@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>João Kusaka — Analista de Suporte de TI N2 & Infraestrutura</title>
+  <meta name="description" content="Analista de Suporte de TI N2 com experiência sólida em infraestrutura, Microsoft 365, Active Directory, redes, gestão de ativos e automação de processos com Python e Node.js." />
+  <meta name="author" content="João Vitor Umetsu Kusaka" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="João Kusaka — Analista de Suporte de TI N2 & Infraestrutura" />
+  <meta property="og:description" content="Suporte N2, administração de Microsoft 365, gestão de ativos de TI e automação de processos." />
+  <meta property="og:url"         content="https://joaokusaka.dev" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="João Kusaka — Suporte de TI N2 & Infraestrutura" />
+  <meta name="twitter:description" content="Sustento a infraestrutura, resolvo incidentes N2 e automatizo o que trava a operação." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Variáveis de Design ───────────────────────────────────── */
+    :root {
+      --bg:          #FBF9F5;
+      --bg-alt:      #F3F0EA;
+      --text:        #1A1A1A;
+      --text-muted:  #5C5751;
+      --accent:      #204B6E; /* Azul técnico sóbrio de infra */
+      --accent-warm: #8C4825;
+      --border:      #DDD8CE;
+      --white:       #FFFFFF;
+
+      --font-display: 'Space Grotesk', -apple-system, sans-serif;
+      --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      --radius:      4px;
+      --max-w:       1120px;
+      --gap:         clamp(1.5rem, 4vw, 3rem);
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    /* ─── Barra de progresso de leitura ────────────────────────── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--accent);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* ─── Utilitários ───────────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 5vw, 2.5rem);
+    }
+
+    .label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ─── Header ────────────────────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(251, 249, 245, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+      gap: 1rem;
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.1875rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .logo-badge {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(32, 75, 110, 0.08);
+      color: var(--accent);
+      border: 1px solid rgba(32, 75, 110, 0.22);
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 2.5vw, 2rem);
+    }
+
+    .nav a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .nav a:hover,
+    .nav a.active { color: var(--text); font-weight: 600; }
+
+    .availability {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .availability::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2E8B57;
+      flex-shrink: 0;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-cv-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.35rem 0.75rem;
+      transition: all 0.2s;
+    }
+
+    .btn-cv-header:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(45, 84, 115, 0.05);
+    }
+
+    .btn-cv-header svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ─── Botão de Copiar E-mail ─────────────────────────────── */
+    .contact-email-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-copy-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+    }
+
+    .btn-copy-email:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-copy-email.copied {
+      background: #2E8B57;
+      color: var(--white);
+      border-color: #2E8B57;
+    }
+
+    .btn-copy-email svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.35rem 0.6rem;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-btn span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: var(--text);
+      transition: transform 0.25s, opacity 0.25s;
+    }
+
+    .menu-btn.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .menu-btn.open span:nth-child(2) { opacity: 0; }
+    .menu-btn.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+    /* ─── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      padding: clamp(4.5rem, 10vw, 7.5rem) 0 clamp(3.5rem, 7vw, 5.5rem);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--gap);
+      align-items: end;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-pill {
+      font-family: var(--font-mono);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #EAE5DC;
+      color: var(--text);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5.8vw, 4rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--accent);
+      border-bottom: 2px solid rgba(32, 75, 110, 0.3);
+      padding-bottom: 2px;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      max-width: 48ch;
+      margin-bottom: 2rem;
+    }
+
+    .hero-desc strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--accent);
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .hero-cta:hover {
+      background: #1F3B52;
+      transform: translateY(-1px);
+    }
+
+    .hero-secondary-link {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .hero-secondary-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-side {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .hero-stat {
+      border-left: 2px solid var(--border);
+      padding-left: 1.25rem;
+      transition: border-color 0.2s;
+    }
+
+    .hero-stat:hover { border-color: var(--accent); }
+
+    .hero-stat-badge {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .hero-stat-title {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .hero-stat-label {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ─── Faixa de serviços animada ─────────────────────────────── */
+    .services-band {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0.85rem 0;
+      background: var(--bg-alt);
+    }
+
+    .services-track {
+      display: inline-flex;
+      animation: marquee 32s linear infinite;
+    }
+
+    .services-track:hover { animation-play-state: paused; }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .service-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 0 1.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .service-item::after {
+      content: '·';
+      color: var(--border);
+      font-size: 1.25rem;
+      line-height: 0;
+    }
+
+    /* ─── Seção genérica ────────────────────────────────────────── */
+    section { padding: clamp(4rem, 8vw, 6rem) 0; }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: clamp(2rem, 4vw, 3.5rem);
+    }
+
+    .section-title-wrap {}
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.85rem, 4vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .section-subtitle {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      max-width: 55ch;
+    }
+
+    .section-link {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .section-link:hover { border-color: var(--accent); }
+
+    /* ─── Pilares de TI / Atuação N2 ────────────────────────────── */
+    .pillars-section {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+    }
+
+    .pillar-card {
+      background: var(--bg);
+      padding: 2.25rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.25s, transform 0.2s;
+    }
+
+    .pillar-card:hover {
+      background: var(--bg-alt);
+    }
+
+    .pillar-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(45, 84, 115, 0.08);
+      border-radius: var(--radius);
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .pillar-icon svg { width: 22px; height: 22px; }
+
+    .pillar-num {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--border);
+      margin-bottom: 0.5rem;
+    }
+
+    .pillar-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .pillar-desc {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+
+    .pillar-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: auto;
+    }
+
+    .pillar-tag {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 0.15rem 0.5rem;
+    }
+
+    /* ─── Experiência ───────────────────────────────────────────── */
+    .experience {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+    }
+
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0 3rem;
+      padding: clamp(2rem, 3.5vw, 3rem) 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .exp-item:last-child { border-bottom: none; }
+
+    .exp-period {
+      padding-top: 0.25rem;
+    }
+
+    .exp-dates {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .exp-badge {
+      font-family: var(--font-mono);
+      display: inline-block;
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #2E8B57;
+      background: rgba(46, 139, 87, 0.1);
+      border: 1px solid rgba(46, 139, 87, 0.25);
+      border-radius: 100px;
+      padding: 0.15rem 0.6rem;
+    }
+
+    .exp-role {
+      font-family: var(--font-display);
+      font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .exp-company {
+      font-size: 0.9375rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .exp-bullets li {
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .exp-bullets li::before {
+      content: '■';
+      position: absolute;
+      left: 0;
+      font-size: 0.5rem;
+      top: 0.55rem;
+      color: var(--accent);
+    }
+
+    .exp-bullets li strong { color: var(--text); font-weight: 600; }
+
+    /* ─── Projetos ──────────────────────────────────────────────── */
+    .projects {
+      border-top: 1px solid var(--border);
+    }
+
+    .project-section-block {
+      margin-bottom: clamp(3.5rem, 6vw, 5rem);
+    }
+
+    .project-section-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .block-header {
+      margin-bottom: 2rem;
+    }
+
+    .block-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      display: inline-block;
+    }
+
+    .block-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+
+    .block-subtitle {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 60ch;
+    }
+
+    /* Card Destaque de Infra (Planta / Mapeamento de Filiais) */
+    .infra-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .infra-card:hover {
+      background: var(--bg-alt);
+      border-color: var(--accent);
+    }
+
+    .infra-thumb {
+      background: linear-gradient(135deg, #D4DFDE 0%, #BCCDCB 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2.5rem, 5vw, 4rem) 2rem;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+
+    .infra-thumb svg {
+      transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .infra-card:hover .infra-thumb svg {
+      transform: scale(1.05);
+    }
+
+    .infra-badge-tag {
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(255, 255, 255, 0.85);
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      border: 1px solid rgba(32, 75, 110, 0.2);
+    }
+
+    .infra-body {
+      padding: clamp(2rem, 3.5vw, 3rem);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Grid de Dev (3 Projetos) */
+    .dev-projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+    }
+
+    .project-card {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      transition: background 0.25s;
+    }
+
+    .project-card:hover { background: var(--bg-alt); }
+
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .project-thumb-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .project-thumb-inner.p1 {
+      background: linear-gradient(135deg, #D4DFDE 0%, #BCCDCB 100%);
+    }
+
+    .project-thumb-inner.p2 {
+      background: linear-gradient(135deg, #DFD9CF 0%, #C9C1B2 100%);
+    }
+
+    .project-thumb-inner.p3 {
+      background: linear-gradient(135deg, #D5DCE4 0%, #BCC7D3 100%);
+    }
+
+    .project-thumb-inner.p4 {
+      background: linear-gradient(135deg, #DFD6D3 0%, #CBBDBA 100%);
+    }
+
+    .project-card:hover .project-thumb-inner { transform: scale(1.03); }
+
+    .project-body {
+      padding: 1.75rem 1.75rem 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-category {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .project-year {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .project-name {
+      font-family: var(--font-display);
+      font-size: 1.375rem;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.25rem;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .stack-tag {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.2rem 0.65rem;
+    }
+
+    .case-study {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .case-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .case-text {
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+
+    .project-result {
+      margin-top: auto;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8125rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .project-result span { color: var(--accent); font-weight: 700; }
+
+    .project-links {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.35rem 0.8rem;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .project-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(45, 84, 115, 0.04);
+    }
+
+    .project-link svg { width: 13px; height: 13px; }
+
+    /* ─── Sobre ─────────────────────────────────────────────────── */
+    .about {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: clamp(3rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .about-label { margin-bottom: 1.5rem; }
+
+    .about-bio {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2.5vw, 1.45rem);
+      font-weight: 600;
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.75rem;
+    }
+
+    .about-bio em {
+      font-style: normal;
+      color: var(--accent);
+      border-bottom: 2px solid rgba(32, 75, 110, 0.3);
+      padding-bottom: 2px;
+    }
+
+    .about-text {
+      font-size: 0.9375rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text strong { color: var(--text); font-weight: 600; }
+
+    .about-photo-wrap { position: relative; }
+
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(160deg, #D4DFDE 0%, #BCCDCB 100%);
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.75rem;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+
+    .about-photo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D5473' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .about-photo-badge {
+      position: relative;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.35rem;
+    }
+
+    .about-photo-caption {
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── Habilidades / Competências ────────────────────────────── */
+    .skills-section {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .skills-group { margin-bottom: 1.75rem; }
+
+    .skills-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .skills-title span {
+      color: var(--accent);
+      font-weight: 500;
+      font-size: 0.625rem;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .skills-list li {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.35rem 0.95rem;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+
+    .skills-list li.highlight {
+      background: #EAE5DC;
+      border-color: #CFC7B9;
+      font-weight: 600;
+    }
+
+    .skills-list li:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ─── Processo de Suporte ───────────────────────────────────── */
+    .process {
+      border-top: 1px solid var(--border);
+      padding-top: 3rem;
+      margin-top: 3.5rem;
+    }
+
+    .process-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+    }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .step-name {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .step-desc {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* ─── Formação ──────────────────────────────────────────────── */
+    .education {
+      border-top: 1px solid var(--border);
+      padding-top: 3rem;
+      margin-top: 3.5rem;
+    }
+
+    .education-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.75rem;
+    }
+
+    .edu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .edu-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem 2rem;
+      align-items: start;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .edu-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .edu-name {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      margin-bottom: 0.2rem;
+      color: var(--text);
+    }
+
+    .edu-institution {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .edu-year {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    /* ─── Contato / Footer ──────────────────────────────────────── */
+    .contact {
+      border-top: 1px solid var(--border);
+      padding: clamp(5rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 5rem);
+    }
+
+    .contact-inner { max-width: 680px; }
+
+    .contact-eyebrow { margin-bottom: 1.5rem; }
+
+    .contact-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    .contact-desc {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      max-width: 50ch;
+    }
+
+    .contact-email-big {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: clamp(1.1rem, 2.8vw, 1.5rem);
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid transparent;
+      width: fit-content;
+      transition: border-color 0.2s;
+    }
+
+    .contact-email-big:hover { border-color: var(--accent); }
+
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.65rem 1.2rem;
+      background: var(--bg);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(45, 84, 115, 0.05);
+    }
+
+    .contact-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.75rem 0;
+      background: var(--bg);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy { font-size: 0.75rem; color: var(--text-muted); }
+
+    .footer-links { display: flex; gap: 1.5rem; }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── Scroll reveal ─────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.65s cubic-bezier(.25,.46,.45,.94),
+                  transform 0.65s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── Back to top ───────────────────────────────────────────── */
+    .back-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 42px;
+      height: 42px;
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s, background 0.2s;
+      pointer-events: none;
+    }
+
+    .back-top.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .back-top:hover { background: var(--accent); }
+    .back-top svg { width: 18px; height: 18px; }
+
+    /* ─── Acessibilidade: sem animações ────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .services-track { animation: none; }
+      .back-top { transition: none; }
+      .availability::before { animation: none; }
+    }
+
+    /* ─── Impressão ─────────────────────────────────────────────── */
+    @media print {
+      header, .services-band, .back-top, .hero-actions,
+      .section-link, .contact-links, footer { display: none !important; }
+      body { background: #fff; color: #000; font-size: 12pt; }
+      .hero, section { padding: 1.5rem 0; break-inside: avoid; }
+      .projects-grid, .pillars-grid { grid-template-columns: 1fr; }
+      .project-card, .pillar-card { border: 1px solid #ccc; margin-bottom: 1rem; }
+    }
+
+    /* ─── Mobile ─────────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .hero-grid         { grid-template-columns: 1fr; }
+      .hero-side         { flex-direction: row; gap: 2rem; }
+      .pillars-grid      { grid-template-columns: repeat(2, 1fr); }
+      .infra-card        { grid-template-columns: 1fr; }
+      .infra-thumb       { border-right: none; border-bottom: 1px solid var(--border); padding: 3rem 1.5rem; }
+      .dev-projects-grid { grid-template-columns: 1fr; }
+      .projects-grid     { grid-template-columns: 1fr; }
+      .about-grid        { grid-template-columns: 1fr; }
+      .about-photo       { aspect-ratio: 4/3; max-width: 340px; }
+      .process-steps     { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .menu-btn { display: flex; }
+
+      .nav {
+        display: none;
+        position: absolute;
+        top: 62px;
+        left: 0;
+        right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 0.5rem 0;
+      }
+
+      .nav.open { display: flex; }
+
+      .nav a {
+        width: 100%;
+        padding: 0.85rem clamp(1.25rem, 5vw, 2.5rem);
+        font-size: 0.9375rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav .availability {
+        padding: 0.85rem clamp(1.25rem, 5vw, 2.5rem);
+        font-size: 0.8125rem;
+      }
+
+      .hero-side         { flex-direction: column; gap: 1.5rem; }
+      .pillars-grid      { grid-template-columns: 1fr; }
+      .section-header    { flex-direction: column; align-items: flex-start; }
+      .process-steps     { grid-template-columns: 1fr; }
+      .footer-inner      { flex-direction: column; align-items: flex-start; }
+      .edu-item          { grid-template-columns: 1fr; }
+      .exp-item          { grid-template-columns: 1fr; gap: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- ─── HEADER ─────────────────────────────────────────────── -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo-group">
+          <a href="#" class="logo">João<span>.</span>Kusaka</a>
+          <span class="logo-badge">TI & Infra N2</span>
+        </div>
+
+        <nav class="nav" id="nav">
+          <a href="#atuacao">Atuação</a>
+          <a href="#experiencia">Experiência</a>
+          <a href="#infra">Infraestrutura</a>
+          <a href="#dev">Dev & IoT</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#contato">Contato</a>
+          <span class="availability">Disponível para oportunidades</span>
+        </nav>
+
+        <div class="header-actions">
+          <a href="#contato" class="btn-cv-header" title="Entrar em contato">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            CV
+          </a>
+          <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ─── HERO ───────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-left">
+            <div class="hero-eyebrow">
+              <span class="hero-pill">Analista de Suporte de TI N2</span>
+              <span class="label">Angelus Funerária · Registro, SP</span>
+            </div>
+
+            <h1 class="hero-title reveal">
+              Garantindo estabilidade,<br/>
+              suporte resolutivo e<br/>
+              <em>automação sob medida.</em>
+            </h1>
+
+            <p class="hero-desc reveal reveal-delay-1">
+              Atuo na sustentação e evolução de ambientes corporativos de TI:
+              <strong>administração do Microsoft 365, suporte N2 a hardware e redes,
+              gestão de ativos e resolução de incidentes complexos</strong>.
+              Meu diferencial é técnico: utilizo <strong>Python e desenvolvimento interno</strong>
+              para automatizar rotinas operacionais e criar ferramentas que simplificam a gestão de TI.
+            </p>
+
+            <div class="hero-actions reveal reveal-delay-2">
+              <a href="#experiencia" class="hero-cta">Ver Experiência N2 →</a>
+              <a href="#atuacao" class="hero-secondary-link">Como eu atuo na infraestrutura</a>
+            </div>
+          </div>
+
+          <div class="hero-side reveal reveal-delay-1">
+            <div class="hero-stat">
+              <div class="hero-stat-badge">Ambiente Corporativo</div>
+              <div class="hero-stat-title">Suporte N2 Ativo</div>
+              <div class="hero-stat-label">
+                Hardware, VPN, redes, Windows, GPO e atendimento técnico resolutivo para múltiplas filiais.
+              </div>
+            </div>
+
+            <div class="hero-stat">
+              <div class="hero-stat-badge">Administração Cloud</div>
+              <div class="hero-stat-title">Microsoft 365 & AD</div>
+              <div class="hero-stat-label">
+                Gestão centralizada de usuários, licenças, permissões, acessos e segurança da informação.
+              </div>
+            </div>
+
+            <div class="hero-stat">
+              <div class="hero-stat-badge">Diferencial Técnico</div>
+              <div class="hero-stat-title">Automação com Código</div>
+              <div class="hero-stat-label">
+                Scripts em Python e APIs em Node.js construídas para eliminar tarefas repetitivas de TI.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FAIXA DE SERVIÇOS ────────────────────────────────────── -->
+    <div class="services-band" aria-hidden="true">
+      <div class="services-track">
+        <span class="service-item">Suporte N2 a Sistemas & Hardware</span>
+        <span class="service-item">Microsoft 365 & Active Directory</span>
+        <span class="service-item">Gestão de Ativos de TI</span>
+        <span class="service-item">VPN, Redes & Conectividade</span>
+        <span class="service-item">Automação de Processos com Python</span>
+        <span class="service-item">Políticas de Grupo (GPO) & Windows</span>
+        <span class="service-item">Desenvolvimento de Ferramentas Internas</span>
+        <span class="service-item">Documentação Técnica & POPs</span>
+        <span class="service-item">Suporte N2 a Sistemas & Hardware</span>
+        <span class="service-item">Microsoft 365 & Active Directory</span>
+        <span class="service-item">Gestão de Ativos de TI</span>
+        <span class="service-item">VPN, Redes & Conectividade</span>
+        <span class="service-item">Automação de Processos com Python</span>
+        <span class="service-item">Políticas de Grupo (GPO) & Windows</span>
+        <span class="service-item">Desenvolvimento de Ferramentas Internas</span>
+        <span class="service-item">Documentação Técnica & POPs</span>
+      </div>
+    </div>
+
+    <!-- ─── PILARES DE ATUAÇÃO EM TI ──────────────────────────────── -->
+    <section id="atuacao" class="pillars-section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <span class="label">Competências Centrais</span>
+            <h2 class="section-title reveal">Como eu atuo na infraestrutura</h2>
+            <p class="section-subtitle reveal reveal-delay-1">
+              Do atendimento ao usuário de ponta até a gestão da infraestrutura central e automação de processos.
+            </p>
+          </div>
+        </div>
+
+        <div class="pillars-grid">
+
+          <!-- Pilar 1 -->
+          <div class="pillar-card reveal">
+            <div class="pillar-icon">
+              <!-- Ícone M365 / Cloud / AD -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </div>
+            <div class="pillar-num">01 / ADMINISTRAÇÃO</div>
+            <h3 class="pillar-title">Microsoft 365 & Active Directory</h3>
+            <p class="pillar-desc">
+              Gestão de locatário M365, provisionamento e desativação de usuários, controle de licenças,
+              permissões, grupos de segurança e políticas no Active Directory / GPO.
+            </p>
+            <div class="pillar-tags">
+              <span class="pillar-tag">Microsoft 365</span>
+              <span class="pillar-tag">AD</span>
+              <span class="pillar-tag">GPO</span>
+              <span class="pillar-tag">Acessos</span>
+            </div>
+          </div>
+
+          <!-- Pilar 2 -->
+          <div class="pillar-card reveal reveal-delay-1">
+            <div class="pillar-icon">
+              <!-- Ícone Suporte N2 / Ferramenta / Diagnóstico -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+              </svg>
+            </div>
+            <div class="pillar-num">02 / SUPORTE N2</div>
+            <h3 class="pillar-title">Diagnóstico & Incidentes Críticos</h3>
+            <p class="pillar-desc">
+              Atendimento de segundo nível para problemas de hardware, estações Windows,
+              conectividade de rede, VPN corporativa e falhas em sistemas internos que travam a operação.
+            </p>
+            <div class="pillar-tags">
+              <span class="pillar-tag">Hardware</span>
+              <span class="pillar-tag">VPN</span>
+              <span class="pillar-tag">Redes</span>
+              <span class="pillar-tag">Windows</span>
+            </div>
+          </div>
+
+          <!-- Pilar 3 -->
+          <div class="pillar-card reveal reveal-delay-2">
+            <div class="pillar-icon">
+              <!-- Ícone Gestão de Ativos / Inventário -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </div>
+            <div class="pillar-num">03 / GESTÃO DE TI</div>
+            <h3 class="pillar-title">Ativos de TI & Homologação</h3>
+            <p class="pillar-desc">
+              Padronização de imagens de sistema, preparação e configuração de máquinas,
+              onboarding técnico de colaboradores e controle rigoroso de inventário entre matriz e filiais.
+            </p>
+            <div class="pillar-tags">
+              <span class="pillar-tag">Inventário</span>
+              <span class="pillar-tag">Deploy de SO</span>
+              <span class="pillar-tag">Onboarding</span>
+              <span class="pillar-tag">Filiais</span>
+            </div>
+          </div>
+
+          <!-- Pilar 4 -->
+          <div class="pillar-card reveal reveal-delay-3">
+            <div class="pillar-icon">
+              <!-- Ícone Automação / Código -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+                <line x1="12" y1="2" x2="12" y2="22" stroke-dasharray="2 3"/>
+              </svg>
+            </div>
+            <div class="pillar-num">04 / AUTOMAÇÃO</div>
+            <h3 class="pillar-title">Scripts & Ferramentas Internas</h3>
+            <p class="pillar-desc">
+              Automação de rotinas repetitivas com Python (processamento de relatórios, monitoramentos)
+              e desenvolvimento de aplicações sob demanda com Node.js para apoiar a infraestrutura.
+            </p>
+            <div class="pillar-tags">
+              <span class="pillar-tag">Python</span>
+              <span class="pillar-tag">Node.js</span>
+              <span class="pillar-tag">APIs REST</span>
+              <span class="pillar-tag">Scripts</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIÊNCIA PROFISSIONAL ──────────────────────────────── -->
+    <section id="experiencia" class="experience">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <span class="label">Histórico de Atuação</span>
+            <h2 class="section-title reveal">Experiência Profissional</h2>
+            <p class="section-subtitle reveal reveal-delay-1">
+              Vivência diária no suporte de operações corporativas, sustentação de ambientes e desenvolvimento interno.
+            </p>
+          </div>
+        </div>
+
+        <div class="exp-list">
+
+          <!-- Angelus -->
+          <div class="exp-item reveal">
+            <div class="exp-period">
+              <div class="exp-dates">Jun. 2025 — Atual</div>
+              <span class="exp-badge">Em atuação</span>
+            </div>
+            <div class="exp-content">
+              <h3 class="exp-role">Analista de Suporte de TI N2</h3>
+              <div class="exp-company">Angelus Plano de Assistência Funerária Ltda. · Registro, SP</div>
+              <ul class="exp-bullets">
+                <li>
+                  <strong>Suporte Resolutivo N2:</strong> Atendimento especializado a incidentes de hardware, software,
+                  conectividade de rede e acessos VPN para colaboradores da matriz e filiais operacionais.
+                </li>
+                <li>
+                  <strong>Administração do Microsoft 365:</strong> Gestão de usuários, concessão de licenças,
+                  configuração de caixas de correio, permissões granulares e controle de segurança de acessos.
+                </li>
+                <li>
+                  <strong>Gestão do Ciclo de Vida de Ativos:</strong> Preparação, configuração, homologação e
+                  entrega de equipamentos para novas contratações, mantendo o parque de TI auditável e funcional.
+                </li>
+                <li>
+                  <strong>Automação de Processos & Desenvolvimento Interno:</strong> Criação de scripts em Python
+                  para automação de rotinas de áreas internas e desenvolvimento de aplicações web/APIs em Node.js.
+                </li>
+                <li>
+                  <strong>Procedimentos Técnicos & Infraestrutura:</strong> Elaboração de POPs (Procedimentos Operacionais Padrão)
+                  para incidentes recorrentes e participação ativa em projetos de melhoria contínua da infraestrutura de TI.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- LocalSig -->
+          <div class="exp-item reveal reveal-delay-1">
+            <div class="exp-period">
+              <div class="exp-dates">Estágio · 6 meses</div>
+            </div>
+            <div class="exp-content">
+              <h3 class="exp-role">Estagiário de TI e Desenvolvimento</h3>
+              <div class="exp-company">LocalSig Inteligência Geográfica · Registro, SP</div>
+              <ul class="exp-bullets">
+                <li>
+                  <strong>Automações Operacionais:</strong> Desenvolvi scripts em Python para automatizar tarefas repetitivas
+                  e tratamento de dados, reduzindo o tempo operacional da equipe.
+                </li>
+                <li>
+                  <strong>Gestão de Dados Técnicos:</strong> Utilização prática de QGIS e AutoCAD no mapeamento,
+                  organização e gerenciamento de dados geográficos e bases espaciais.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SEÇÃO: PROJETOS (INFRA & DEV SEPARADOS) ─────────── -->
+    <section class="projects">
+      <div class="container">
+
+        <!-- BLOCO 1: INFRAESTRUTURA & OPERAÇÕES (A PLANTA / MAPEAMENTO) -->
+        <div id="infra" class="project-section-block">
+          <div class="block-header">
+            <span class="block-tag">01 / Projeto de Infraestrutura & Suporte N2</span>
+            <h2 class="block-title reveal">A Planta & Mapa de Ativos de TI das Filiais</h2>
+            <p class="block-subtitle reveal reveal-delay-1">
+              Centralização e auditoria física de equipamentos: a "planta digital" de infraestrutura desenvolvida para sustentar o suporte N2 da Angelus.
+            </p>
+          </div>
+
+          <div class="infra-card reveal">
+            <div class="infra-thumb">
+              <!-- Mapa / Planta com Pin e Divisões -->
+              <svg width="105" height="105" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22 L30 15 L50 22 L68 15 V62 L50 69 L30 62 L12 69 Z"
+                      stroke="#204B6E" stroke-width="1.8" stroke-linejoin="round" fill="#204B6E" fill-opacity="0.08"/>
+                <line x1="30" y1="15" x2="30" y2="62" stroke="#204B6E" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.6"/>
+                <line x1="50" y1="22" x2="50" y2="69" stroke="#204B6E" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.6"/>
+                <path d="M16 42 Q40 38 64 44" stroke="#204B6E" stroke-width="1.2" stroke-dasharray="4 5" opacity="0.4" stroke-linecap="round"/>
+                <path d="M40 18 C40 18 50 26 50 33 C50 38.5 45.5 43 40 43 C34.5 43 30 38.5 30 33 C30 26 40 18 40 18 Z"
+                      fill="#204B6E" fill-opacity="0.22" stroke="#204B6E" stroke-width="1.8" stroke-linejoin="round"/>
+                <circle cx="40" cy="33" r="4.5" fill="#204B6E" fill-opacity="0.9"/>
+                <ellipse cx="40" cy="46" rx="6" ry="2.5" fill="#204B6E" fill-opacity="0.15"/>
+              </svg>
+              <span class="infra-badge-tag">Planta Digital de Ativos</span>
+            </div>
+
+            <div class="infra-body">
+              <div class="project-meta">
+                <span class="project-category">Gestão de Ativos de TI · Operação & Filiais</span>
+                <span class="project-year">2025</span>
+              </div>
+
+              <h3 class="project-name">Mapeamento Centralizado de Ativos de TI das Filiais — Angelus</h3>
+
+              <div class="project-stack">
+                <span class="stack-tag">React (Vite)</span>
+                <span class="stack-tag">Node.js</span>
+                <span class="stack-tag">Express</span>
+                <span class="stack-tag">MongoDB</span>
+                <span class="stack-tag">AWS</span>
+                <span class="stack-tag">GitHub Actions CI/CD</span>
+              </div>
+
+              <div class="case-study">
+                <div class="case-block">
+                  <div class="case-label">O Gargalo de Infraestrutura</div>
+                  <p class="case-text">
+                    Com filiais descentralizadas, o inventário de máquinas, equipamentos de rede e periféricos
+                    era mantido em planilhas sem rastreabilidade. Dificultava manutenções preventivas,
+                    onboarding de colaboradores e triagem ágil em chamados de suporte N2.
+                  </p>
+                </div>
+                <div class="case-block">
+                  <div class="case-label">A Solução em Produção</div>
+                  <p class="case-text">
+                    Construí uma aplicação web para cadastrar, auditar e mapear geograficamente os ativos de cada unidade.
+                    Implementei autenticação JWT, emissão e upload de termos de entrega assinados e esteira de CI/CD para deploy seguro na AWS.
+                  </p>
+                </div>
+              </div>
+
+              <div class="project-result">
+                <span>100% dos ativos mapeados</span> por filial. Redução expressiva no tempo de atendimento de chamados N2 e controle patrimonial auditável.
+              </div>
+
+              <div class="project-links">
+                <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="project-link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOCO 2: DESENVOLVIMENTO DE SOFTWARE & IOT -->
+        <div id="dev" class="project-section-block">
+          <div class="section-header" style="margin-bottom: 2.25rem;">
+            <div class="section-title-wrap">
+              <span class="block-tag">02 / Desenvolvimento de Software & IoT</span>
+              <h2 class="block-title reveal">Projetos de Software, Telemetria & APIs</h2>
+              <p class="block-subtitle reveal reveal-delay-1">
+                Aplicações completas, integração de sensores em tempo real com ESP32 e arquitetura de microsserviços/APIs testadas.
+              </p>
+            </div>
+            <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="section-link">Ver GitHub →</a>
+          </div>
+
+          <div class="dev-projects-grid">
+
+            <!-- Projeto Dev 1: IoT Camarões -->
+            <article class="project-card reveal">
+              <div class="project-thumb">
+                <div class="project-thumb-inner p2">
+                  <!-- Camarão estilizado -->
+                  <svg width="84" height="84" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg"
+                       stroke="#7A6A52" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M58 18 C66 24 68 36 60 48 C52 60 36 66 24 60 C16 56 14 46 20 40" stroke-width="1.8" fill="none"/>
+                    <path d="M58 18 C62 22 62 30 56 36 C50 42 40 44 34 42" stroke-width="1.8" fill="#7A6A52" fill-opacity="0.12"/>
+                    <path d="M50 44 C44 50 36 54 28 54" stroke-width="1" opacity="0.5"/>
+                    <path d="M44 52 C38 56 32 58 26 58" stroke-width="1" opacity="0.4"/>
+                    <path d="M58 18 L66 10" stroke-width="1.6"/>
+                    <path d="M60 16 L74 8" stroke-width="1.2" opacity="0.8"/>
+                    <path d="M62 20 L76 18" stroke-width="1.2" opacity="0.8"/>
+                    <path d="M20 40 L10 36" stroke-width="1.6"/>
+                    <path d="M20 40 L12 44" stroke-width="1.6"/>
+                    <path d="M20 40 L14 50" stroke-width="1.6"/>
+                    <path d="M20 40 L20 52" stroke-width="1.6"/>
+                    <path d="M44 46 L40 56" stroke-width="1" opacity="0.6"/>
+                    <path d="M38 50 L34 60" stroke-width="1" opacity="0.6"/>
+                    <circle cx="60" cy="22" r="3" fill="#7A6A52" fill-opacity="0.6" stroke-width="1.2"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="project-body">
+                <div class="project-meta">
+                  <span class="project-category">IoT · Telemetria & Redes</span>
+                  <span class="project-year">2024</span>
+                </div>
+
+                <h3 class="project-name">Monitoramento IoT de Criação de Camarões — Camarize</h3>
+
+                <div class="project-stack">
+                  <span class="stack-tag">Node.js</span>
+                  <span class="stack-tag">Express</span>
+                  <span class="stack-tag">MySQL</span>
+                  <span class="stack-tag">ESP32</span>
+                  <span class="stack-tag">MQTT</span>
+                </div>
+
+                <div class="case-study">
+                  <div class="case-block">
+                    <div class="case-label">O Desafio</div>
+                    <p class="case-text">
+                      Necessidade de monitorar parâmetros críticos (temperatura, pH e amônia)
+                      de tanques aquícolas sem depender de leituras manuais esparsas.
+                    </p>
+                  </div>
+                  <div class="case-block">
+                    <div class="case-label">A Solução</div>
+                    <p class="case-text">
+                      Integração de hardware ESP32 via protocolo MQTT com backend Node.js,
+                      persistência em MySQL e dashboard para visualização em tempo real.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="project-result">
+                  Telemetria contínua com <span>alertas de desvio</span> em tempo real.
+                </div>
+
+                <div class="project-links">
+                  <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="project-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Projeto Dev 2: MiteScan -->
+            <article class="project-card reveal reveal-delay-1">
+              <div class="project-thumb">
+                <div class="project-thumb-inner p3">
+                  <!-- Abelha estilizada -->
+                  <svg width="84" height="84" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="28" cy="28" rx="13" ry="8" transform="rotate(-20 28 28)"
+                             stroke="#204B6E" stroke-width="1.4" fill="#204B6E" fill-opacity="0.08"/>
+                    <ellipse cx="54" cy="28" rx="13" ry="8" transform="rotate(20 54 28)"
+                             stroke="#204B6E" stroke-width="1.4" fill="#204B6E" fill-opacity="0.08"/>
+                    <ellipse cx="41" cy="52" rx="11" ry="15" stroke="#204B6E" stroke-width="1.6"
+                             fill="#204B6E" fill-opacity="0.1"/>
+                    <path d="M30.5 46 Q41 43 51.5 46" stroke="#204B6E" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M30 52 Q41 49 52 52"    stroke="#204B6E" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M31 58 Q41 55 51 58"    stroke="#204B6E" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="41" cy="34" r="8" stroke="#204B6E" stroke-width="1.6" fill="#204B6E" fill-opacity="0.08"/>
+                    <circle cx="37.5" cy="33" r="2.2" fill="#204B6E" fill-opacity="0.7"/>
+                    <circle cx="44.5" cy="33" r="2.2" fill="#204B6E" fill-opacity="0.7"/>
+                    <path d="M38 27 L32 16" stroke="#204B6E" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M44 27 L50 16" stroke="#204B6E" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="32" cy="15" r="2.5" fill="#204B6E" fill-opacity="0.8"/>
+                    <circle cx="50" cy="15" r="2.5" fill="#204B6E" fill-opacity="0.8"/>
+                    <path d="M41 67 L41 74" stroke="#204B6E" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="project-body">
+                <div class="project-meta">
+                  <span class="project-category">Automação · ML & Backend</span>
+                  <span class="project-year">2024</span>
+                </div>
+
+                <h3 class="project-name">Visão Computacional na Apicultura — MiteScan</h3>
+
+                <div class="project-stack">
+                  <span class="stack-tag">Python</span>
+                  <span class="stack-tag">FastAPI</span>
+                  <span class="stack-tag">PostgreSQL</span>
+                  <span class="stack-tag">MQTT</span>
+                  <span class="stack-tag">Machine Learning</span>
+                </div>
+
+                <div class="case-study">
+                  <div class="case-block">
+                    <div class="case-label">O Desafio</div>
+                    <p class="case-text">
+                      Identificar precocemente o ácaro Varroa e deformidades em asas de abelhas
+                      por processamento de imagem, evitando a perda de colmeias inteiras.
+                    </p>
+                  </div>
+                  <div class="case-block">
+                    <div class="case-label">A Solução</div>
+                    <p class="case-text">
+                      Backend em FastAPI com banco PostgreSQL, comunicação IoT por MQTT
+                      e modelos de visão computacional para detecção automatizada de anomalias.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="project-result">
+                  <span>Diagnóstico precoce</span> com visão computacional e telemetria de campo.
+                </div>
+
+                <div class="project-links">
+                  <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="project-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Projeto Dev 3: API & Backend com Testes -->
+            <article class="project-card reveal reveal-delay-2">
+              <div class="project-thumb">
+                <div class="project-thumb-inner p4">
+                  <!-- Terminal / API -->
+                  <svg width="84" height="84" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="14" width="62" height="54" rx="4" stroke="#7A5A56" stroke-width="1.6" fill="#7A5A56" fill-opacity="0.06"/>
+                    <rect x="10" y="14" width="62" height="12" rx="4" stroke="none" fill="#7A5A56" fill-opacity="0.12"/>
+                    <line x1="10" y1="26" x2="72" y2="26" stroke="#7A5A56" stroke-width="1" opacity="0.4"/>
+                    <circle cx="20" cy="20" r="2.5" fill="#7A5A56" fill-opacity="0.5"/>
+                    <circle cx="28" cy="20" r="2.5" fill="#7A5A56" fill-opacity="0.5"/>
+                    <circle cx="36" cy="20" r="2.5" fill="#7A5A56" fill-opacity="0.5"/>
+                    <path d="M28 36 C24 36 23 38 23 40 C23 42 20 43 20 44 C20 45 23 46 23 48 C23 50 24 52 28 52"
+                          stroke="#7A5A56" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                    <path d="M54 36 C58 36 59 38 59 40 C59 42 62 43 62 44 C62 45 59 46 59 48 C59 50 58 52 54 52"
+                          stroke="#7A5A56" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                    <circle cx="41" cy="40" r="1.5" fill="#7A5A56" fill-opacity="0.7"/>
+                    <circle cx="41" cy="44" r="1.5" fill="#7A5A56" fill-opacity="0.7"/>
+                    <line x1="22" y1="58" x2="42" y2="58" stroke="#7A5A56" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="project-body">
+                <div class="project-meta">
+                  <span class="project-category">APIs & Backend · Confiabilidade</span>
+                  <span class="project-year">2023</span>
+                </div>
+
+                <h3 class="project-name">API REST com Testes Automatizados — Blog Backend</h3>
+
+                <div class="project-stack">
+                  <span class="stack-tag">NestJS</span>
+                  <span class="stack-tag">Sequelize</span>
+                  <span class="stack-tag">MySQL</span>
+                  <span class="stack-tag">Jest</span>
+                  <span class="stack-tag">Cloudinary</span>
+                </div>
+
+                <div class="case-study">
+                  <div class="case-block">
+                    <div class="case-label">O Objetivo</div>
+                    <p class="case-text">
+                      Desenvolver uma API REST segura com CRUD de posts, modelos relacionais,
+                      upload de imagens via Cloudinary e padrão de arquitetura modular.
+                    </p>
+                  </div>
+                  <div class="case-block">
+                    <div class="case-label">A Implementação</div>
+                    <p class="case-text">
+                      Construção com NestJS e Sequelize no MySQL, cobrindo fluxos críticos
+                      com testes automatizados em Jest (unitários e de integração).
+                    </p>
+                  </div>
+                </div>
+
+                <div class="project-result">
+                  <span>Confiabilidade e testes</span> com suíte automatizada em Jest.
+                </div>
+
+                <div class="project-links">
+                  <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="project-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── SOBRE & COMPETÊNCIAS ─────────────────────────────────── -->
+    <section id="sobre" class="about">
+      <div class="container">
+        <div class="about-grid">
+
+          <div class="about-left">
+            <span class="label about-label">Perfil Técnico</span>
+
+            <p class="about-bio reveal">
+              Sou Analista de Suporte com raciocínio de quem constrói software:
+              <em>não apenas corrijo o sintoma, resolvo a causa raiz.</em>
+            </p>
+
+            <p class="about-text reveal reveal-delay-1">
+              Natural de Registro, interior de São Paulo. Formado como <strong>Técnico em Desenvolvimento de Sistemas pela ETEC</strong>
+              e atualmente cursando <strong>Tecnólogo em Desenvolvimento de Software Multiplataforma na Fatec Registro</strong>.
+            </p>
+
+            <p class="about-text reveal reveal-delay-1">
+              No dia a dia na <strong>Angelus Assistência Funerária</strong>, atuo como <strong>Analista de Suporte de TI N2</strong>.
+              Minha responsabilidade vai da garantia de funcionamento dos sistemas corporativos, suporte a VPN e infraestrutura
+              até a administração completa do locatário Microsoft 365. Paralelamente, utilizo <strong>Python e Node.js</strong> para
+              criar automações internas e ferramentas que eliminam processos manuais da operação.
+            </p>
+
+            <p class="about-text reveal reveal-delay-1">
+              Possuo <strong>Inglês Avançado (7 anos no Fisk)</strong>, com facilidade plena para leitura de documentações técnicas,
+              troubleshooting com suporte internacional e comunicação técnica clara.
+            </p>
+
+            <!-- Habilidades com Suporte & Infra em 1º lugar -->
+            <div class="skills-section reveal reveal-delay-2">
+              <div class="skills-group">
+                <div class="skills-title">
+                  Suporte de TI & Infraestrutura <span>(Foco Principal)</span>
+                </div>
+                <ul class="skills-list">
+                  <li class="highlight">Microsoft 365 (Admin)</li>
+                  <li class="highlight">Active Directory</li>
+                  <li class="highlight">Gestão de Ativos de TI</li>
+                  <li class="highlight">Suporte N2 (Hardware/Software)</li>
+                  <li>VPN Corporativa</li>
+                  <li>Redes TCP/IP & Conectividade</li>
+                  <li>GPO (Políticas de Grupo)</li>
+                  <li>Windows Server & Desktop</li>
+                  <li>Documentação Técnica & POPs</li>
+                </ul>
+              </div>
+
+              <div class="skills-group">
+                <div class="skills-title">
+                  Automação & Scripting <span>(Superpoder de TI)</span>
+                </div>
+                <ul class="skills-list">
+                  <li class="highlight">Python para Automação</li>
+                  <li>Scripts Operacionais</li>
+                  <li>APIs REST Internas</li>
+                  <li>Tratamento de Dados com Python</li>
+                  <li>Rotinas Automatizadas</li>
+                </ul>
+              </div>
+
+              <div class="skills-group">
+                <div class="skills-title">
+                  Desenvolvimento, Dados & Cloud
+                </div>
+                <ul class="skills-list">
+                  <li>Node.js</li>
+                  <li>Express & NestJS</li>
+                  <li>React (Vite)</li>
+                  <li>FastAPI</li>
+                  <li>MySQL</li>
+                  <li>PostgreSQL</li>
+                  <li>MongoDB</li>
+                  <li>AWS</li>
+                  <li>Docker</li>
+                  <li>Git / GitHub / CI-CD</li>
+                  <li>ESP32 & MQTT (IoT)</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Processo com foco em Suporte e Resolução -->
+            <div class="process reveal">
+              <div class="process-title">Metodologia de Atendimento & Suporte</div>
+              <div class="process-steps">
+                <div class="step">
+                  <div class="step-num">01</div>
+                  <div class="step-name">Triagem & Causa Raiz</div>
+                  <p class="step-desc">Identifico a origem real do incidente, não apenas o sintoma superficial.</p>
+                </div>
+                <div class="step">
+                  <div class="step-num">02</div>
+                  <div class="step-name">Estabilização</div>
+                  <p class="step-desc">Aplicação da resolução técnica com foco em restaurar a operação com segurança.</p>
+                </div>
+                <div class="step">
+                  <div class="step-num">03</div>
+                  <div class="step-name">Padronização</div>
+                  <p class="step-desc">Documento o procedimento em POP para acelerar futuros atendimentos.</p>
+                </div>
+                <div class="step">
+                  <div class="step-num">04</div>
+                  <div class="step-name">Automação</div>
+                  <p class="step-desc">Se a tarefa ou incidente é recorrente, crio script ou rotina para automatizar.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formação -->
+            <div class="education reveal">
+              <div class="education-title">Formação Acadêmica & Idiomas</div>
+              <div class="edu-list">
+                <div class="edu-item">
+                  <div>
+                    <div class="edu-name">Tecnólogo em Desenvolvimento de Software Multiplataforma</div>
+                    <div class="edu-institution">Fatec Registro</div>
+                  </div>
+                  <div class="edu-year">2024 – 2026</div>
+                </div>
+                <div class="edu-item">
+                  <div>
+                    <div class="edu-name">Técnico em Desenvolvimento de Sistemas (Ensino Médio Integrado)</div>
+                    <div class="edu-institution">ETEC Registro</div>
+                  </div>
+                  <div class="edu-year">2021 – 2023</div>
+                </div>
+                <div class="edu-item">
+                  <div>
+                    <div class="edu-name">Inglês Avançado</div>
+                    <div class="edu-institution">Fisk — 7 anos de formação</div>
+                  </div>
+                  <div class="edu-year">Avançado (B2/C1)</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="about-right reveal reveal-delay-1">
+            <div class="about-photo-wrap">
+              <div class="about-photo">
+                <div class="about-photo-badge">João Vitor U. Kusaka</div>
+                <span class="about-photo-caption">Analista de Suporte N2 · Registro, SP</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CONTATO ───────────────────────────────────────────── -->
+    <section id="contato" class="contact">
+      <div class="container">
+        <div class="contact-inner">
+          <span class="label contact-eyebrow">Contato Direto</span>
+
+          <h2 class="contact-title reveal">
+            Vamos conversar sobre<br/>oportunidades em TI?
+          </h2>
+
+          <p class="contact-desc reveal reveal-delay-1">
+            Estou disponível para vagas de Suporte de TI N2, Infraestrutura, Sysadmin Júnior ou
+            funções híbridas que valorizem a capacidade de unir operação sólida com automação.
+            Retorno rápido em até 24 horas.
+          </p>
+
+          <div class="contact-email-row reveal reveal-delay-1">
+            <a href="mailto:joao.kusaka27@gmail.com" class="contact-email-big" style="margin-bottom: 0;">
+              joao.kusaka27@gmail.com
+            </a>
+            <button class="btn-copy-email" id="btnCopyEmail" aria-label="Copiar endereço de e-mail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copiar</span>
+            </button>
+          </div>
+
+          <div class="contact-links reveal reveal-delay-2">
+            <a href="tel:+5513982090321" class="contact-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.7A2 2 0 012 .9h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.74a16 16 0 006.29 6.29l1.17-1.17a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+              </svg>
+              +55 (13) 9 8209-0321
+            </a>
+            <a href="https://www.linkedin.com/in/joao-kusaka/" target="_blank" rel="noopener" class="contact-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+              </svg>
+              LinkedIn
+            </a>
+            <a href="https://github.com/joaovitor101" target="_blank" rel="noopener" class="contact-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+              </svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-copy">© 2026 João Vitor Umetsu Kusaka — Analista de Suporte de TI N2.</span>
+        <nav class="footer-links">
+          <a href="#atuacao">Atuação</a>
+          <a href="#experiencia">Experiência</a>
+          <a href="#infra">Infraestrutura</a>
+          <a href="#dev">Dev & IoT</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#contato">Contato</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão Voltar ao Topo -->
+  <button class="back-top" id="backTop" aria-label="Voltar ao topo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 15l-6-6-6 6"/>
+    </svg>
+  </button>
+
+  <!-- ─── JS ────────────────────────────────────────────────── -->
+  <script>
+    // ── Menu mobile ────────────────────────────────────────────
+    const menuBtn = document.getElementById('menuBtn');
+    const nav     = document.getElementById('nav');
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('open');
+      menuBtn.classList.toggle('open', isOpen);
+      menuBtn.setAttribute('aria-expanded', isOpen);
+    });
+
+    nav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('open');
+        menuBtn.classList.remove('open');
+      });
+    });
+
+    // ── Scroll reveal ──────────────────────────────────────────
+    const reveals = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => revealObserver.observe(el));
+
+    document.querySelectorAll('.hero .reveal').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 80);
+    });
+
+    // ── Nav ativo no scroll ────────────────────────────────────
+    const sections = document.querySelectorAll('section[id], .project-section-block[id]');
+    const navLinks  = document.querySelectorAll('.nav a[href^="#"]');
+
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active',
+              link.getAttribute('href') === '#' + entry.target.id
+            );
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(s => navObserver.observe(s));
+
+    // ── Back to top ────────────────────────────────────────────
+    const backTop = document.getElementById('backTop');
+
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('show', window.scrollY > 500);
+    }, { passive: true });
+
+    backTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ── Barra de progresso de leitura ─────────────────────────
+    const progressBar = document.getElementById('progressBar');
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct       = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    }, { passive: true });
+
+    // ── Botão Copiar E-mail ────────────────────────────────────
+    const btnCopyEmail = document.getElementById('btnCopyEmail');
+    if (btnCopyEmail) {
+      btnCopyEmail.addEventListener('click', () => {
+        const email = 'joao.kusaka27@gmail.com';
+        navigator.clipboard.writeText(email).then(() => {
+          const span = btnCopyEmail.querySelector('span');
+          const originalText = span.textContent;
+          span.textContent = 'Copiado!';
+          btnCopyEmail.classList.add('copied');
+          setTimeout(() => {
+            span.textContent = originalText;
+            btnCopyEmail.classList.remove('copied');
+          }, 2200);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
