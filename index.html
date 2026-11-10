@@ -1585,11 +1585,13 @@
       overflow: hidden;
       contain: paint;
       opacity: 0;
-      transition: opacity 0.25s ease;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
     }
 
     .lang-wave-overlay.active {
       opacity: 1;
+      visibility: visible;
     }
 
     .lang-wave-line {
@@ -1597,11 +1599,14 @@
       left: 0;
       right: 0;
       height: 180px;
-      box-shadow: 0 0 40px rgba(65, 130, 185, 0.65), 0 0 12px rgba(255, 255, 255, 0.95);
+      transform: translateY(-300px);
+      opacity: 0;
+      pointer-events: none;
     }
 
     /* Onda descendo: PT-BR -> EN-US */
     .lang-wave-overlay.active.wave-down .lang-wave-line {
+      opacity: 1;
       background: linear-gradient(180deg, 
         rgba(32, 75, 110, 0) 0%, 
         rgba(65, 130, 185, 0.18) 30%, 
@@ -1609,11 +1614,13 @@
         rgba(65, 130, 185, 0.45) 75%, 
         rgba(32, 75, 110, 0) 100%
       );
+      box-shadow: 0 0 40px rgba(65, 130, 185, 0.65), 0 0 12px rgba(255, 255, 255, 0.95);
       animation: sweepWaveDown 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
 
     /* Onda subindo: EN-US -> PT-BR */
     .lang-wave-overlay.active.wave-up .lang-wave-line {
+      opacity: 1;
       background: linear-gradient(0deg, 
         rgba(32, 75, 110, 0) 0%, 
         rgba(65, 130, 185, 0.18) 30%, 
@@ -1621,6 +1628,7 @@
         rgba(65, 130, 185, 0.45) 75%, 
         rgba(32, 75, 110, 0) 100%
       );
+      box-shadow: 0 0 40px rgba(65, 130, 185, 0.65), 0 0 12px rgba(255, 255, 255, 0.95);
       animation: sweepWaveUp 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
 
@@ -2853,8 +2861,11 @@
         const dirClass = isGoingToEn ? 'wave-down' : 'wave-up';
         waveOverlay.classList.add('active', dirClass);
         setTimeout(() => {
-          waveOverlay.classList.remove('active', 'wave-down', 'wave-up');
-        }, 1500);
+          waveOverlay.classList.remove('active');
+          setTimeout(() => {
+            waveOverlay.classList.remove('wave-down', 'wave-up');
+          }, 280);
+        }, 1380);
       }
 
       // Coleta todos os elementos traduzíveis
